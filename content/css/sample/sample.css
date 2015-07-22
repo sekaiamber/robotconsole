@@ -7,7 +7,8 @@ body
 }
 .main,
 .content,
-.console
+.console,
+.menu-item.active
 {
 	box-shadow: 0 0 15px 2px #101010;
 }
@@ -141,4 +142,28 @@ body
 .console .cnsl-block.last
 {
 	border-right: 0px;
+}
+
+/*********
+* menu
+**********/
+.menu-item.active
+{
+	background-color: #2B323C;
+}
+
+/*********
+* metro
+**********/
+.metro-bt
+{
+	cursor: pointer;
+}
+.metro-bt.hover
+{
+	background: #343B47;
+}
+.metro-bt.press
+{
+	background: #424954 !important;
 }
