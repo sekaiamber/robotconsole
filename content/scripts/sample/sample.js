@@ -12,6 +12,9 @@ $(document).ready(function(){
         stopAll : $(".metro-bt.bt-stopall").first()
     }
     var $controller = controllerInit(controllerMap);
+    $controller.bind("float", "click", function(){
+        console.log(1);
+    });
 });
 
 /*******************
@@ -63,9 +66,7 @@ controllerWeakMap.prototype = {
         }
     },
     set : function(obj, value) {
-        if (typeof obj == "string") {
-            obj = this._k_obj[obj];
-        };
+        obj = this._getObj(obj);
         if (obj) {
             var _name = obj.data("__control__name__");
             if (_name) {
@@ -77,9 +78,7 @@ controllerWeakMap.prototype = {
         };
     },
     get : function(obj) {
-        if (typeof obj == "string") {
-            obj = this._k_obj[obj];
-        };
+        obj = this._getObj(obj);
         if (obj) {
             var _ret = obj.data("__control__name__");
             if (_ret) {
@@ -90,10 +89,20 @@ controllerWeakMap.prototype = {
             _ret = this._k_v[_ret]
         };
         return _ret;
+    },
+    _getObj : function(obj) {
+        if (typeof obj == "string") {
+            obj = this._k_obj[obj];
+        };
+        return obj;
     }
 }
 
 function controller (map) {
     this.update(map);
+    this.bind = function(obj, eventType, handler) {
+        obj = this._getObj(obj);
+        obj.bind(eventType, handler);
+    };
 };
 controller.prototype = new controllerWeakMap();
