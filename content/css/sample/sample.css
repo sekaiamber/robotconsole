@@ -33,6 +33,7 @@ body
 	width: 1314px;
 	background-color: #232730;
 	height: 900px;
+	position: relative;
 }
 
 /*********
@@ -132,12 +133,25 @@ body
 {
 	border-bottom: 0px !important;
 }
+.showboard.part-2
+{
+	width: 160px;
+	height: 640px;
+}
 .showboard.part-2 .metro-block
 {
 	width: 160px;
 	height: 159px;
 	border-width: 0px;
 	border-bottom: #161d28 solid 1px;
+	border-left: #161d28 solid 1px;
+	position: relative;
+	left: -1px;
+	background: #00ff00;
+}
+.showboard.part-2 .metro-block.last
+{
+	border-bottom: 0px !important;
 }
 .console .cnsl-block.last
 {

@@ -9,10 +9,14 @@ $(document).ready(function(){
         left : $(".metro-bt.bt-left").first(),
         back : $(".metro-bt.bt-back").first(),
         right : $(".metro-bt.bt-right").first(),
-        stopAll : $(".metro-bt.bt-stopall").first()
+        stopAll : $(".metro-bt.bt-stopall").first(),
+        sbR1 : $(".metro-block.sb-right-1").first(),
+        sbR2 : $(".metro-block.sb-right-2").first(),
+        sbR3 : $(".metro-block.sb-right-3").first(),
+        sbR4 : $(".metro-block.sb-right-4").first()
     }
     var $controller = controllerInit(controllerMap);
-    $controller.bind("float", "click", function(){
+    $controller.bind("sbR1", "click", function(){
         console.log(1);
     });
 });
