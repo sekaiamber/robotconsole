@@ -1,0 +1,183 @@
+/*********
+* g
+**********/
+body
+{
+	background-color: #2a313b;
+}
+.main,
+.content,
+.console,
+.menu-item.active
+{
+	box-shadow: 0 0 15px 2px #101010;
+}
+.top,
+.menu-item
+{
+	height: 50px;
+}
+.left,
+.content,
+.cnsl-block
+{
+	float: left;
+}
+
+/*********
+* main
+**********/
+.main
+{
+	margin: 30px auto;
+	width: 1314px;
+	background-color: #232730;
+	height: 900px;
+	position: relative;
+}
+
+/*********
+* left
+**********/
+.left
+{
+	width: 50px;
+}
+.left>div
+{
+	width: 100%;
+}
+
+/*********
+* content
+**********/
+.content
+{
+	width: 1264px;
+	background-color: #2a313b;
+}
+.content .top
+{
+	background-color: #242b35;
+}
+.content .title
+{
+	height: 75px;
+}
+.console .zone-1
+{
+	border-width: 0px;
+	border-bottom: #161d28 solid 1px;
+}
+.console .zone-2
+{
+	height: 150px;
+}
+.cnsl-block
+{
+	border-width: 0px;
+	border-right: #161d28 solid 1px;
+}
+.cnsl-block .row
+{
+	clear: both;
+}
+.direction
+{
+	display: table;
+	border-width: 0px;
+	border-bottom: #161d28 solid 1px;
+}
+.direction .row
+{
+	border-width: 0px;
+	border-top: #161d28 solid 1px;
+}
+.direction .row .metro-block
+{
+	height: 100px;
+	width: 100px;
+}
+.direction .row .metro-block.width-2
+{
+	width: 201px;
+}
+.row .metro-block
+{
+	display: table-cell;
+	border-width: 0px;
+	border-right: #161d28 solid 1px;
+}
+.row .metro-block.last
+{
+	border-right: 0px !important;
+}
+.picture
+{
+	height: 640px;
+	width: 800px;
+}
+.showboard.part-1 .metro-block
+{
+	width: 150px;
+	height: 130px;
+	border-width: 0px;
+	border-right: #161d28 solid 1px;
+}
+.showboard.part-1 .row
+{
+	border-width: 0px;
+	border-bottom: #161d28 solid 1px;
+}
+.showboard.part-1 .row.last
+{
+	border-bottom: 0px !important;
+}
+.showboard.part-2
+{
+	width: 160px;
+	height: 640px;
+}
+.showboard.part-2 .metro-block
+{
+	width: 160px;
+	height: 159px;
+	border-width: 0px;
+	border-bottom: #161d28 solid 1px;
+	border-left: #161d28 solid 1px;
+	position: relative;
+	left: -1px;
+	background: #00ff00;
+}
+.showboard.part-2 .metro-block.last
+{
+	border-bottom: 0px !important;
+}
+.console .cnsl-block.last
+{
+	border-right: 0px;
+}
+
+/*********
+* menu
+**********/
+.menu-item.active
+{
+	background-color: #2B323C;
+}
+
+/*********
+* metro
+**********/
+.metro-bt
+{
+	cursor: pointer;
+}
+.metro-bt.hover
+{
+	background: #343B47;
+}
+.metro-bt.press
+{
+	background: #424954 !important;
+}
