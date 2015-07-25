@@ -9,16 +9,24 @@ $(document).ready(function(){
         left : $(".metro-bt.bt-left").first(),
         back : $(".metro-bt.bt-back").first(),
         right : $(".metro-bt.bt-right").first(),
+        shift : $(".metro-block.csl-shift").first(),
         stopAll : $(".metro-bt.bt-stopall").first(),
         sbR1 : $(".metro-block.sb-right-1").first(),
         sbR2 : $(".metro-block.sb-right-2").first(),
         sbR3 : $(".metro-block.sb-right-3").first(),
-        sbR4 : $(".metro-block.sb-right-4").first()
+        sbR4 : $(".metro-block.sb-right-4").first(),
+        menu1 : $(".menu-item:eq(0)").first(),
+        menu2 : $(".menu-item:eq(1)").first(),
+        menu3 : $(".menu-item:eq(2)").first(),
+        menu4 : $(".menu-item:eq(3)").first(),
     }
     var $controller = controllerInit(controllerMap);
-    $controller.bind("sbR1", "click", function(){
-        console.log(1);
-    });
+    menuInit($controller);
+    sbRightInit($controller);
+    shiftInit($controller);
+    // $controller.bind("sbR1", "click", function(){
+    //     console.log(1);
+    // });
 });
 
 /*******************
@@ -45,6 +53,86 @@ function metroBtInit () {
 function controllerInit(map) {
     var $controller = new controller(map);
     return $controller;
+};
+
+function menuInit($controller) {
+    "menu1,menu2,menu3,menu4".replace($controller.reach, function(key){
+        $controller.bind(key, "mouseenter", function(){
+            $(this).addClass("hover");
+            $(this).velocity('stop').velocity({
+                  width: 125,
+                  left: -75
+            }, 300);
+        });
+        $controller.bind(key, "mouseleave", function(){
+            $(this).velocity('stop').velocity({
+                  width: 50,
+                  left: 0
+            }, 300, function(){
+                $(this).removeClass("hover");
+            });
+        });
+    });
+};
+
+function sbRightInit($controller) {
+    "sbR1,sbR2,sbR3,sbR4".replace($controller.reach, function(key){
+        $controller.bind(key, "mouseenter", function(){
+            $(this).velocity('stop').velocity({
+                  width: 320,
+                  left: -161
+            }, 300);
+        });
+        $controller.bind(key, "mouseleave", function(){
+            $(this).velocity('stop').velocity({
+                  width: 160,
+                  left: -1
+            }, 300);
+        });
+    });
+};
+
+function shiftInit($controller) {
+    $controller.set("shift", {
+        total : 10,
+        current : 1,
+        itemWidth : 19.2,
+        setLevel : function(level, data) {
+            $(".shift-item:lt(" + level + ")", this).addClass("active");
+            level -= 1;
+            $(".shift-item:gt(" + level + ")", this).removeClass("active");
+            data['current'] = level + 1;
+        },
+        hoverLevel : function(level, data) {
+            $(".shift-item:lt(" + level + ")", this).addClass("hover");
+            level -= 1;
+            $(".shift-item:gt(" + level + ")", this).removeClass("hover");
+        },
+        removeClass : function(name) {
+            $(".shift-item", this).removeClass(name);
+        }
+    });
+    $controller.do("shift", function($obj) {
+        var $shift = $('<div class="shift"></div>');
+        var data = $controller.get("shift");
+        for (var i = 0; i < data['total']; i++) {
+            $shift.append('<div class="shift-item"></div>');
+        };
+        $(".shift-item:last", $shift).addClass("last");
+        $obj.append($shift);
+        $(".shift-item").each(function(i){
+            $(this).css("width", data['itemWidth']);
+            $(this).hover(function(){
+                data.hoverLevel.call($shift, i + 1, data);
+            }, function(){
+                data.removeClass.call($shift, "hover");
+            });
+            $(this).click(function(){
+                data.setLevel.call($shift, i + 1, data);
+            });
+        });
+        data.setLevel.call($shift, data['current'], data);
+    });
 };
 
 /*******************
@@ -104,9 +192,16 @@ controllerWeakMap.prototype = {
 
 function controller (map) {
     this.update(map);
+
+    this.reach = /[^, ]+/g;
+
     this.bind = function(obj, eventType, handler) {
         obj = this._getObj(obj);
         obj.bind(eventType, handler);
+    };
+    this.do = function(obj, handler) {
+        obj = this._getObj(obj);
+        handler(obj, this);
     };
 };
 controller.prototype = new controllerWeakMap();

@@ -8,7 +8,8 @@ body
 .main,
 .content,
 .console,
-.menu-item.active
+.menu-item.active,
+.menu-item.hover
 {
 	box-shadow: 0 0 15px 2px #101010;
 }
@@ -23,6 +24,13 @@ body
 {
 	float: left;
 }
+.content,
+.console,
+.menu-item
+{
+	position: relative;
+}
+
 
 /*********
 * main
@@ -104,6 +112,7 @@ body
 }
 .row .metro-block
 {
+	vertical-align: top;
 	display: table-cell;
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
@@ -161,9 +170,61 @@ body
 /*********
 * menu
 **********/
-.menu-item.active
+.menu-item
+{
+	cursor: pointer;
+	margin-bottom: 15px;
+	color: #626B7B;
+	overflow: hidden;
+}
+.menu-item.active,
+.menu-item.hover
 {
 	background-color: #2B323C;
+	color: #BCC5D5;
+}
+.menu-item .text
+{
+	height: 50px;
+	width: 100px;
+	text-align: center;
+	line-height: 50px;
+}
+
+/*********
+* shift
+**********/
+.csl-shift .text
+{
+	height: 49px;
+}
+.csl-shift .shift
+{
+	height: 50px;
+	width: 100%;
+	border-width: 0px;
+	border-top: #161d28 solid 1px;
+}
+.csl-shift .shift-item
+{
+	cursor: pointer;
+	height: 100%;
+	float: left;
+	border-width: 0px;
+	border-right: #161d28 solid 1px;
+}
+.csl-shift .shift-item.hover,
+.csl-shift .shift-item.active:not(.hover)
+{
+	background: #444C5A !important;
+}
+.csl-shift .shift-item.active
+{
+	background: #596579 !important;
+}
+.csl-shift .shift-item.last
+{
+	border-right: 0px;
 }
 
 /*********
@@ -172,12 +233,77 @@ body
 .metro-bt
 {
 	cursor: pointer;
+	color: #626B7B;
 }
 .metro-bt.hover
 {
 	background: #343B47;
+	color: #BCC5D5;
 }
 .metro-bt.press
 {
 	background: #424954 !important;
+}
+
+/*********
+* fonts
+**********/
+@font-face
+{
+	font-family: "iconfont";
+	src: url('font/iconfont.eot'); /* IE9*/
+	src: url('font/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+	url('font/iconfont.woff') format('woff'), /* chrome、firefox */
+	url('font/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+	url('font/iconfont.svg#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont
+{
+	font-family:"iconfont" !important;
+	font-size:16px;
+	font-style:normal;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+	-moz-osx-font-smoothing: grayscale;
+}
+.icon-diagnosis:before { content: "\e600"; }
+.icon-console:before { content: "\e601"; }
+.icon-setting:before { content: "\e602"; }
+.icon-pic:before { content: "\e603"; }
+.icon-up:before { content: "\e604"; }
+.icon-down:before { content: "\e605"; }
+.icon-float:before { content: "\e606"; }
+.icon-dive:before { content: "\e607"; }
+.icon-right:before { content: "\e608"; }
+.icon-left:before { content: "\e609"; }
+.icon-stopall:before { content: "\e60a"; }
+.icon-turnleft:before { content: "\e60b"; }
+.icon-turnright:before { content: "\e60c"; }
+.icon-reset:before { content: "\e60d"; }
+
+.menu-item .iconfont
+{
+	height: 50px;
+	width: 50px;
+	float: left;
+	text-align: center;
+	line-height: 50px;
+	font-size: 27px;
+}
+.direction .iconfont
+{
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	line-height: 100px;
+	font-size: 50px;
+}
+.showboard.part-1 .iconfont
+{
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	line-height: 130px;
+	font-size: 50px;
 }
