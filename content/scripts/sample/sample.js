@@ -1,5 +1,11 @@
 $(document).ready(function(){
     metroBtInit();
+    clockInit({
+        full : false,
+        tagFront : false,
+        am : "AM",
+        pm : "PM",
+    });
 
     // controll initialize.
     var controllerMap = {
@@ -19,14 +25,19 @@ $(document).ready(function(){
         menu2 : $(".menu-item:eq(1)").first(),
         menu3 : $(".menu-item:eq(2)").first(),
         menu4 : $(".menu-item:eq(3)").first(),
+        light : $(".cnsl-block .light").first(),
     }
     var $controller = controllerInit(controllerMap);
     menuInit($controller);
     sbRightInit($controller);
-    shiftInit($controller);
-    // $controller.bind("sbR1", "click", function(){
-    //     console.log(1);
-    // });
+    shiftInit($controller, {
+        total : 10,
+        current : 1,
+        itemWidth : 19.2,
+    });
+    lightInit($controller, {
+        current : 0.5
+    });
 });
 
 /*******************
@@ -49,6 +60,39 @@ function metroBtInit () {
        $(this).removeClass("press"); 
     });
 };
+
+var __CLOCK__;
+var __CLOCK_DATA__;
+function getTimeString() {
+    var now= new Date();
+    var hour= now.getHours();
+    var minute=now.getMinutes();
+    var second=now.getSeconds();
+    var time = "";
+    if (__CLOCK_DATA__.full) {
+        time = hour + " : " + minute + " : " + second;
+    } else {
+        var tag = __CLOCK_DATA__.am;
+        if (hour > 12) {
+            hour -= 12;
+            tag = __CLOCK_DATA__.pm;
+        };
+        time = hour + " : " + minute + " : " + second;
+        if (__CLOCK_DATA__.tagFront) {
+            time = tag + " " + time;
+        } else {
+            time = time + " " + tag;
+        };
+    };
+    __CLOCK__.html(time);
+}
+
+function clockInit(data) {
+    __CLOCK__  = $(".content .clock:eq(0)");
+    __CLOCK_DATA__ = data;
+    getTimeString();
+    var myTime = setInterval("getTimeString()",1000); 
+}
 
 function controllerInit(map) {
     var $controller = new controller(map);
@@ -92,11 +136,8 @@ function sbRightInit($controller) {
     });
 };
 
-function shiftInit($controller) {
-    $controller.set("shift", {
-        total : 10,
-        current : 1,
-        itemWidth : 19.2,
+function shiftInit($controller, data) {
+    $.extend(data, {
         setLevel : function(level, data) {
             $(".shift-item:lt(" + level + ")", this).addClass("active");
             level -= 1;
@@ -112,9 +153,9 @@ function shiftInit($controller) {
             $(".shift-item", this).removeClass(name);
         }
     });
-    $controller.do("shift", function($obj) {
+    $controller.set("shift", data);
+    $controller.do("shift", function($obj, data) {
         var $shift = $('<div class="shift"></div>');
-        var data = $controller.get("shift");
         for (var i = 0; i < data['total']; i++) {
             $shift.append('<div class="shift-item"></div>');
         };
@@ -132,6 +173,37 @@ function shiftInit($controller) {
             });
         });
         data.setLevel.call($shift, data['current'], data);
+    });
+};
+
+function lightInit($controller, data) {
+    $.extend(data, {
+        setValue : function(value, data) {
+            $(".current", this).css('width', (value * 100) + "%");
+            data['current'] = value;
+        },
+        hoverValue : function(value, data) {
+            $(".mask", this).css('width', (value * 100) + "%");
+        }
+    });
+    $controller.set("light", data);
+    $controller.do("light", function($obj, data){
+        $obj.append('<div class="current"></div>');
+        $obj.append('<div class="mask"></div>');
+        data.setValue.call($obj, data['current'], data);
+        $obj.click(function(e){
+            var clickX = e.offsetX;
+            data.setValue.call($(this), clickX / $(this).width(), data);
+        });
+        $obj.hover(function(){
+            $(".mask", $(this)).css('display', 'block');
+        }, function(){
+            $(".mask", $(this)).css('display', 'none');
+        });
+        $obj.mousemove(function(e){
+            var clickX = e.offsetX;
+            data.hoverValue.call($(this), clickX / $(this).width(), data);
+        });
     });
 };
 
@@ -201,7 +273,7 @@ function controller (map) {
     };
     this.do = function(obj, handler) {
         obj = this._getObj(obj);
-        handler(obj, this);
+        handler(obj, this.get(obj), this);
     };
 };
 controller.prototype = new controllerWeakMap();
