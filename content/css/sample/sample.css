@@ -167,21 +167,29 @@ body
 {
 	width: 160px;
 	height: 640px;
+	position: relative;
 }
 .showboard.part-2 .metro-block
 {
 	width: 160px;
 	height: 159px;
-	border-width: 0px;
-	border-bottom: #161d28 solid 1px;
-	border-left: #161d28 solid 1px;
-	position: relative;
+	border: #161d28 solid 1px;
+	position: absolute;
 	left: -1px;
-	background: #00ff00;
+	background: #2a313b;
+	overflow: hidden;
 }
-.showboard.part-2 .metro-block.last
+.showboard.part-2 .metro-block.sb-right-2
 {
-	border-bottom: 0px !important;
+	top: 160px;
+}
+.showboard.part-2 .metro-block.sb-right-3
+{
+	top: 320px;
+}
+.showboard.part-2 .metro-block.sb-right-4
+{
+	top: 480px;
 }
 .console .cnsl-block.last
 {

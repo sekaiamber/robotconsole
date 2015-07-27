@@ -26,6 +26,10 @@ $(document).ready(function(){
         menu3 : $(".menu-item:eq(2)").first(),
         menu4 : $(".menu-item:eq(3)").first(),
         light : $(".cnsl-block .light").first(),
+        pConnection : $("canvas.process.connection").first(),
+        // pConnection : $("canvas.process.connection").first(),
+        // pConnection : $("canvas.process.connection").first(),
+        // pConnection : $("canvas.process.connection").first(),
     }
     var $controller = controllerInit(controllerMap);
     menuInit($controller);
@@ -37,6 +41,13 @@ $(document).ready(function(){
     });
     lightInit($controller, {
         current : 0.5
+    });
+    processInit($controller, {
+        connection : {
+            max : 100.0,
+            min : 0.0,
+            current : 50.0
+        }
     });
 });
 
@@ -207,6 +218,20 @@ function lightInit($controller, data) {
     });
 };
 
+function processInit($controller, data) {
+    $.extend(data, {
+        setValue : function(name, value, data) {
+            // get canvas and clean it
+            var canvas = this;
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, 48, 48);
+            // move to center
+            data[name]['current'] = value;
+        }
+    });
+    $controller.attach
+};
+
 /*******************
 * controller
 ********************/
@@ -218,10 +243,10 @@ function controllerWeakMap (k_obj) {
 controllerWeakMap.prototype = {
     update : function(objs) {
         for(var key in objs) {
-            if (objs[key].data("__control__name__")) {
-                objs[key].data("__control__name__").push(key);
+            if (objs[key].data("__control__")) {
+                objs[key].data("__control__").push(key);
             } else {
-                objs[key].data("__control__name__", [key]);    
+                objs[key].data("__control__", [key]);    
             };
             this._k_obj[key] = objs[key];
             if(!!!this._k_v[key]){
@@ -232,7 +257,7 @@ controllerWeakMap.prototype = {
     set : function(obj, value) {
         obj = this._getObj(obj);
         if (obj) {
-            var _name = obj.data("__control__name__");
+            var _name = obj.data("__control__");
             if (_name) {
                 _name = _name[0];
             };
@@ -244,13 +269,13 @@ controllerWeakMap.prototype = {
     get : function(obj) {
         obj = this._getObj(obj);
         if (obj) {
-            var _ret = obj.data("__control__name__");
+            var _ret = obj.data("__control__");
             if (_ret) {
                 _ret = _ret[0];
             };
         };
         if (_ret) {
-            _ret = this._k_v[_ret]
+            _ret = this._k_v[_ret];
         };
         return _ret;
     },
@@ -269,11 +294,45 @@ function controller (map) {
 
     this.bind = function(obj, eventType, handler) {
         obj = this._getObj(obj);
-        obj.bind(eventType, handler);
+        if (obj) {
+            obj.bind(eventType, handler);
+        };
     };
     this.do = function(obj, handler) {
         obj = this._getObj(obj);
-        handler(obj, this.get(obj), this);
+        if (obj) {
+            handler(obj, this.get(obj), this);
+        };
+    };
+    this.attach = function(obj, funcName, handler) {
+        obj = this._getObj(obj);
+        if (obj) {
+            var _name = obj.data("__control__");
+            if (_name) {
+                _name = _name[0];
+            };
+            if (_name) {
+                var _data = this._k_v[_name];
+                funcName = "__func__" + funcName;
+                var _attach = {};
+                _attach[funcName] = handler;
+                $.extend(_data, _attach);
+            };
+        };
+    };
+    this.invoke = function(obj, funcName) {
+        obj = this._getObj(obj);
+        var _data = this.get(obj);
+        if (_data) {
+            console.log(_data);
+            var handler = _data["__func__" + funcName];
+            if (handler) {
+                var args = [].slice.call(arguments);
+                args.shift();
+                args.shift();
+                handler.apply(obj, args);
+            };    
+        };
     };
 };
 controller.prototype = new controllerWeakMap();
