@@ -179,6 +179,14 @@ body
 	background: #2a313b;
 	overflow: hidden;
 }
+.showboard.part-2 .metro-block canvas
+{
+	width: 320px;
+	height: 160px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 .showboard.part-2 .metro-block.sb-right-2
 {
 	top: 160px;

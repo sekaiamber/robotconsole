@@ -26,10 +26,10 @@ $(document).ready(function(){
         menu3 : $(".menu-item:eq(2)").first(),
         menu4 : $(".menu-item:eq(3)").first(),
         light : $(".cnsl-block .light").first(),
-        pConnection : $("canvas.process.connection").first(),
-        // pConnection : $("canvas.process.connection").first(),
-        // pConnection : $("canvas.process.connection").first(),
-        // pConnection : $("canvas.process.connection").first(),
+        connection : $(".metro-block.sb-right-1 .canvas-container").first(),
+        voltage : $(".metro-block.sb-right-2 .canvas-container").first(),
+        galvano : $(".metro-block.sb-right-3 .canvas-container").first(),
+        power : $(".metro-block.sb-right-4 .canvas-container").first(),
     }
     var $controller = controllerInit(controllerMap);
     menuInit($controller);
@@ -44,10 +44,69 @@ $(document).ready(function(){
     });
     processInit($controller, {
         connection : {
+            title : '连接状态',
             max : 100.0,
             min : 0.0,
-            current : 50.0
-        }
+            current : 64.0,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#3C5A9A',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}ms',
+            dataQueueLength : 20,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+        voltage : {
+            title : '电压',
+            max : 30.0,
+            min : 10.0,
+            current : 17.7,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#DE4837',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}V',
+            dataQueueLength : 20,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+        galvano : {
+            title : '电流',
+            max : 30.0,
+            min : 10.0,
+            current : 22.7,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#5FC382',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}A',
+            dataQueueLength : 20,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+        power : {
+            title : '电量',
+            max : 100.0,
+            min : 0.0,
+            current : 80.7,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#904FB0',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}%',
+            dataQueueLength : 1,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
     });
 });
 
@@ -131,17 +190,29 @@ function menuInit($controller) {
 };
 
 function sbRightInit($controller) {
-    "sbR1,sbR2,sbR3,sbR4".replace($controller.reach, function(key){
+    "sbR1,sbR2,sbR3".replace($controller.reach, function(key){
         $controller.bind(key, "mouseenter", function(){
             $(this).velocity('stop').velocity({
-                  width: 320,
-                  left: -161
+                width: 320,
+                left: -161
+            }, 300);
+            $(".process", this).velocity('stop').velocity({
+                opacity: 0
+            }, 300);
+            $(".history", this).velocity('stop').velocity({
+                opacity: 1
             }, 300);
         });
         $controller.bind(key, "mouseleave", function(){
             $(this).velocity('stop').velocity({
-                  width: 160,
-                  left: -1
+                width: 160,
+                left: -1
+            }, 300);
+            $(".process", this).velocity('stop').velocity({
+                opacity: 1
+            }, 300);
+            $(".history", this).velocity('stop').velocity({
+                opacity: 0
             }, 300);
         });
     });
@@ -222,14 +293,78 @@ function processInit($controller, data) {
     $.extend(data, {
         setValue : function(name, value, data) {
             // get canvas and clean it
-            var canvas = this;
+            var canvas = $('.process', this).first()[0];
             var context = canvas.getContext('2d');
-            context.clearRect(0, 0, 48, 48);
-            // move to center
+            context.clearRect(0, 0, 160, 160);
+            // move to center, draw circle.
+            context.beginPath();
+            context.moveTo(80, 80);
+            context.arc(80, 80, data[name]['radius'], 0, Math.PI * 2, false);
+            context.closePath();
+            context.fillStyle = data[name]['backgroundColor'];
+            context.fill();
+            // draw process.
+            context.beginPath();
+            context.moveTo(80, 80);
+            var process = (value - data[name]['min']) / (data[name]['max'] - data[name]['min']);
+            context.arc(80, 80, data[name]['radius'], 0 - Math.PI / 2, Math.PI * (2 * process - 0.5), false);
+            context.closePath();
+            context.fillStyle = data[name]['foregroundColor'];
+            context.fill();
+            // draw mask.
+            context.beginPath();
+            context.moveTo(80, 80);
+            context.arc(80, 80, data[name]['radius'] - data[name]['size'], 0, Math.PI * 2, false);
+            context.closePath();
+            context.fillStyle = data[name]['maskColor'];
+            context.fill();
+            // draw text.
+            context.font = "bold 12pt Arial";
+            context.fillStyle = data[name]['textColor'];
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            var text = data[name]['format'].replace('@{0}', value);
+            context.fillText(text, 80, 80);
+
+            // update data queue.
+            data[name]['dataQueue'].shift();
+            data[name]['dataQueue'].push(value);
+            // draw history data.
+            canvas = $('.history', this).first()[0];
+            context = canvas.getContext('2d');
+            context.clearRect(0, 0, 320, 160);
+            var each = 320 / (data[name]['dataQueueLength'] - 1);
+            context.beginPath();
+            context.moveTo(0, 160);
+            for (var i = 0; i < data[name]['dataQueueLength']; i++) {
+                var percent = (data[name]['dataQueue'][i] - data[name]['min']) / (data[name]['max'] - data[name]['min']);
+                context.lineTo(i * each, (160 - (data[name]['historyMarginTop'] + data[name]['historyMarginBottom'])) * (1 - percent) + data[name]['historyMarginBottom']);
+            };
+            context.lineTo(320, 160);
+            context.closePath();
+            context.fillStyle = data[name]['foregroundColor'];
+            context.fill();
+            // title
+            context.font = "bold 12pt Arial";
+            context.fillStyle = data[name]['textColor'];
+            context.textAlign = 'left';
+            context.textBaseline = 'middle';
+            context.fillText(data[name]['title'], 10, 20);
+
             data[name]['current'] = value;
         }
     });
-    $controller.attach
+    "connection,voltage,galvano,power".replace($controller.reach, function(name){
+        $controller.set(name, data);
+        data[name]['dataQueue'] = new Array(data[name]['dataQueueLength']);
+        for (var i = 0; i < data[name]['dataQueueLength']; i++) {
+            data[name]['dataQueue'][i] = data[name]['min'];
+        };
+        $controller.attach(name, "draw", function(value, data){
+            data.setValue.call(this , $controller._getName(this), value, data);
+        });
+        $controller.invoke(name, "draw", data[name]['current']);
+    });
 };
 
 /*******************
@@ -255,25 +390,21 @@ controllerWeakMap.prototype = {
         }
     },
     set : function(obj, value) {
-        obj = this._getObj(obj);
-        if (obj) {
-            var _name = obj.data("__control__");
-            if (_name) {
-                _name = _name[0];
-            };
-        };
+        if (typeof obj == "string") {
+            var _name = obj;
+        } else {
+            _name = this._getName(obj);
+        }
         if (_name) {
             this._k_v[_name] = value;
         };
     },
     get : function(obj) {
-        obj = this._getObj(obj);
-        if (obj) {
-            var _ret = obj.data("__control__");
-            if (_ret) {
-                _ret = _ret[0];
-            };
-        };
+        if (typeof obj == "string") {
+            var _ret = obj;
+        } else {
+            _ret = this._getName(obj);
+        }
         if (_ret) {
             _ret = this._k_v[_ret];
         };
@@ -284,7 +415,14 @@ controllerWeakMap.prototype = {
             obj = this._k_obj[obj];
         };
         return obj;
-    }
+    },
+    _getName : function(obj) {
+        var _ret = obj.data("__control__");
+        if (_ret) {
+            return _ret[0];
+        };
+        return undefined;
+    },
 }
 
 function controller (map) {
@@ -324,12 +462,12 @@ function controller (map) {
         obj = this._getObj(obj);
         var _data = this.get(obj);
         if (_data) {
-            console.log(_data);
             var handler = _data["__func__" + funcName];
             if (handler) {
                 var args = [].slice.call(arguments);
                 args.shift();
                 args.shift();
+                args.push(_data);
                 handler.apply(obj, args);
             };    
         };
