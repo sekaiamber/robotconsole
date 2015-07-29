@@ -142,6 +142,11 @@ body
 {
 	border-right: 0px !important;
 }
+.row .metro-block .camera-angle
+{
+	height: 100%;
+	width: 100%;
+}
 .picture
 {
 	height: 640px;

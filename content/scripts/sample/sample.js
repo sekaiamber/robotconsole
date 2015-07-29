@@ -30,6 +30,7 @@ $(document).ready(function(){
         voltage : $(".metro-block.sb-right-2 .canvas-container").first(),
         galvano : $(".metro-block.sb-right-3 .canvas-container").first(),
         power : $(".metro-block.sb-right-4 .canvas-container").first(),
+        cameraAngle : $(".metro-block .camera-angle").first(),
     }
     var $controller = controllerInit(controllerMap);
     menuInit($controller);
@@ -107,6 +108,14 @@ $(document).ready(function(){
             historyMarginTop : 10,
             historyMarginBottom : 10
         },
+    });
+    cameraAngleInit($controller, {
+        current : 0,
+        radius : 90,
+        backgroundColor : '#241F2F',
+        foregroundColor : '#904FB0',
+        maskColor : '#2a313b',
+        textColor : '#ddd'
     });
 });
 
@@ -364,6 +373,22 @@ function processInit($controller, data) {
             data.setValue.call(this , $controller._getName(this), value, data);
         });
         $controller.invoke(name, "draw", data[name]['current']);
+    });
+};
+
+function cameraAngleInit($controller, data) {
+    $.extend(data, {
+        setValue : function(value, data) {
+            var canvas = this[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, 150, 130);
+            context.beginPath();
+            context.moveTo(75, 110);
+            context.arc(75, 110, data[name]['radius'], (-5 / 6) * Math.PI, (-1 / 6) * Math.PI, false);
+            context.closePath();
+            context.fillStyle = data[name]['backgroundColor'];
+            context.fill();
+        }
     });
 };
 
