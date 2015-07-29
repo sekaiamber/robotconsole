@@ -111,11 +111,12 @@ $(document).ready(function(){
     });
     cameraAngleInit($controller, {
         current : 0,
-        radius : 90,
-        backgroundColor : '#241F2F',
-        foregroundColor : '#904FB0',
-        maskColor : '#2a313b',
-        textColor : '#ddd'
+        radius : 70,
+        backgroundColor : '#383F4C',
+        foregroundColor : '#596579',
+        maskColor : '#bcc5d5',
+        textColor : '#ddd',
+        activeAngle : 20
     });
 });
 
@@ -383,13 +384,28 @@ function cameraAngleInit($controller, data) {
             var context = canvas.getContext('2d');
             context.clearRect(0, 0, 150, 130);
             context.beginPath();
-            context.moveTo(75, 110);
-            context.arc(75, 110, data[name]['radius'], (-5 / 6) * Math.PI, (-1 / 6) * Math.PI, false);
+            context.moveTo(75, 100);
+            context.arc(75, 100, data['radius'], (-5 / 6) * Math.PI, (-1 / 6) * Math.PI, false);
             context.closePath();
-            context.fillStyle = data[name]['backgroundColor'];
+            context.fillStyle = data['backgroundColor'];
             context.fill();
+
+            context.beginPath();
+            context.moveTo(75, 100);
+            context.arc(75, 100, data['radius'], (2 * value -180 - data['activeAngle']) / 360 * Math.PI, (2 * value -180 + data['activeAngle']) / 360 * Math.PI, false);
+            context.closePath();
+            context.fillStyle = data['foregroundColor'];
+            context.fill();
+
+            data['current'] = value;
         }
     });
+    $controller.set('cameraAngle', data);
+    $controller.attach('cameraAngle', "draw", function(value, data){
+        data.setValue.call(this , value, data);
+    });
+    //    console.log($(".metro-block .camera-angle").first());
+    $controller.invoke('cameraAngle', "draw", data['current']);
 };
 
 /*******************
