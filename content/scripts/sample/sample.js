@@ -417,7 +417,6 @@ function cameraAngleInit($controller, data) {
 
 function maskInit($controller, hintData, shortcutData) {
     var func = function(value, data) {
-        console.log($(data['selector']));
         if (value) {
             this.addClass("active");
             $(data['selector']).css("display", "block");
