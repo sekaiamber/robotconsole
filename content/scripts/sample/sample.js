@@ -26,6 +26,13 @@ $(document).ready(function(){
         menu3 : $(".menu-item:eq(2)").first(),
         menu4 : $(".menu-item:eq(3)").first(),
         light : $(".cnsl-block .light").first(),
+        connection : $(".metro-block.sb-right-1 .canvas-container").first(),
+        voltage : $(".metro-block.sb-right-2 .canvas-container").first(),
+        galvano : $(".metro-block.sb-right-3 .canvas-container").first(),
+        power : $(".metro-block.sb-right-4 .canvas-container").first(),
+        cameraAngle : $(".metro-block .camera-angle").first(),
+        hint : $(".metro-bt.hint").first(),
+        shortcut : $(".metro-bt.shortcut").first(),
     }
     var $controller = controllerInit(controllerMap);
     menuInit($controller);
@@ -37,6 +44,87 @@ $(document).ready(function(){
     });
     lightInit($controller, {
         current : 0.5
+    });
+    processInit($controller, {
+        connection : {
+            title : '连接状态',
+            max : 100.0,
+            min : 0.0,
+            current : 64.0,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#3C5A9A',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}ms',
+            dataQueueLength : 20,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+        voltage : {
+            title : '电压',
+            max : 30.0,
+            min : 10.0,
+            current : 17.7,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#DE4837',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}V',
+            dataQueueLength : 20,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+        galvano : {
+            title : '电流',
+            max : 30.0,
+            min : 10.0,
+            current : 22.7,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#5FC382',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}A',
+            dataQueueLength : 20,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+        power : {
+            title : '电量',
+            max : 100.0,
+            min : 0.0,
+            current : 80.7,
+            radius : 50,
+            size : 10,
+            backgroundColor : '#241F2F',
+            foregroundColor : '#904FB0',
+            maskColor : '#2a313b',
+            textColor : '#ddd',
+            format : '@{0}%',
+            dataQueueLength : 1,
+            historyMarginTop : 10,
+            historyMarginBottom : 10
+        },
+    });
+    cameraAngleInit($controller, {
+        current : 0,
+        radius : 70,
+        backgroundColor : '#383F4C',
+        foregroundColor : '#596579',
+        maskColor : '#bcc5d5',
+        textColor : '#ddd',
+        activeAngle : 20
+    });
+    maskInit($controller, {
+        current : false,
+        type : 'dl'
+    }, {
+        current : false
     });
 });
 
@@ -120,17 +208,29 @@ function menuInit($controller) {
 };
 
 function sbRightInit($controller) {
-    "sbR1,sbR2,sbR3,sbR4".replace($controller.reach, function(key){
+    "sbR1,sbR2,sbR3".replace($controller.reach, function(key){
         $controller.bind(key, "mouseenter", function(){
             $(this).velocity('stop').velocity({
-                  width: 320,
-                  left: -161
+                width: 320,
+                left: -161
+            }, 300);
+            $(".process", this).velocity('stop').velocity({
+                opacity: 0
+            }, 300);
+            $(".history", this).velocity('stop').velocity({
+                opacity: 1
             }, 300);
         });
         $controller.bind(key, "mouseleave", function(){
             $(this).velocity('stop').velocity({
-                  width: 160,
-                  left: -1
+                width: 160,
+                left: -1
+            }, 300);
+            $(".process", this).velocity('stop').velocity({
+                opacity: 1
+            }, 300);
+            $(".history", this).velocity('stop').velocity({
+                opacity: 0
             }, 300);
         });
     });
@@ -207,6 +307,149 @@ function lightInit($controller, data) {
     });
 };
 
+function processInit($controller, data) {
+    $.extend(data, {
+        setValue : function(name, value, data) {
+            // get canvas and clean it
+            var canvas = $('.process', this).first()[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, 160, 160);
+            // move to center, draw circle.
+            context.beginPath();
+            context.moveTo(80, 80);
+            context.arc(80, 80, data[name]['radius'], 0, Math.PI * 2, false);
+            context.closePath();
+            context.fillStyle = data[name]['backgroundColor'];
+            context.fill();
+            // draw process.
+            context.beginPath();
+            context.moveTo(80, 80);
+            var process = (value - data[name]['min']) / (data[name]['max'] - data[name]['min']);
+            context.arc(80, 80, data[name]['radius'], 0 - Math.PI / 2, Math.PI * (2 * process - 0.5), false);
+            context.closePath();
+            context.fillStyle = data[name]['foregroundColor'];
+            context.fill();
+            // draw mask.
+            context.beginPath();
+            context.moveTo(80, 80);
+            context.arc(80, 80, data[name]['radius'] - data[name]['size'], 0, Math.PI * 2, false);
+            context.closePath();
+            context.fillStyle = data[name]['maskColor'];
+            context.fill();
+            // draw text.
+            context.font = "bold 12pt Arial";
+            context.fillStyle = data[name]['textColor'];
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            var text = data[name]['format'].replace('@{0}', value);
+            context.fillText(text, 80, 80);
+
+            // update data queue.
+            data[name]['dataQueue'].shift();
+            data[name]['dataQueue'].push(value);
+            // draw history data.
+            canvas = $('.history', this).first()[0];
+            context = canvas.getContext('2d');
+            context.clearRect(0, 0, 320, 160);
+            var each = 320 / (data[name]['dataQueueLength'] - 1);
+            context.beginPath();
+            context.moveTo(0, 160);
+            for (var i = 0; i < data[name]['dataQueueLength']; i++) {
+                var percent = (data[name]['dataQueue'][i] - data[name]['min']) / (data[name]['max'] - data[name]['min']);
+                context.lineTo(i * each, (160 - (data[name]['historyMarginTop'] + data[name]['historyMarginBottom'])) * (1 - percent) + data[name]['historyMarginBottom']);
+            };
+            context.lineTo(320, 160);
+            context.closePath();
+            context.fillStyle = data[name]['foregroundColor'];
+            context.fill();
+            // title
+            context.font = "bold 12pt Arial";
+            context.fillStyle = data[name]['textColor'];
+            context.textAlign = 'left';
+            context.textBaseline = 'middle';
+            context.fillText(data[name]['title'], 10, 20);
+
+            data[name]['current'] = value;
+        }
+    });
+    "connection,voltage,galvano,power".replace($controller.reach, function(name){
+        $controller.set(name, data);
+        data[name]['dataQueue'] = new Array(data[name]['dataQueueLength']);
+        for (var i = 0; i < data[name]['dataQueueLength']; i++) {
+            data[name]['dataQueue'][i] = data[name]['min'];
+        };
+        $controller.attach(name, "draw", function(value, data){
+            data.setValue.call(this , $controller._getName(this), value, data);
+        });
+        $controller.invoke(name, "draw", data[name]['current']);
+    });
+};
+
+function cameraAngleInit($controller, data) {
+    $.extend(data, {
+        setValue : function(value, data) {
+            var canvas = this[0];
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, 150, 130);
+            context.beginPath();
+            context.moveTo(75, 100);
+            context.arc(75, 100, data['radius'], (-5 / 6) * Math.PI, (-1 / 6) * Math.PI, false);
+            context.closePath();
+            context.fillStyle = data['backgroundColor'];
+            context.fill();
+
+            context.beginPath();
+            context.moveTo(75, 100);
+            context.arc(75, 100, data['radius'], (2 * value -180 - data['activeAngle']) / 360 * Math.PI, (2 * value -180 + data['activeAngle']) / 360 * Math.PI, false);
+            context.closePath();
+            context.fillStyle = data['foregroundColor'];
+            context.fill();
+
+            data['current'] = value;
+        }
+    });
+    $controller.set('cameraAngle', data);
+    $controller.attach('cameraAngle', "draw", function(value, data){
+        data.setValue.call(this , value, data);
+    });
+    $controller.invoke('cameraAngle', "draw", data['current']);
+};
+
+function maskInit($controller, hintData, shortcutData) {
+    var func = function(value, data) {
+        if (value) {
+            this.addClass("active");
+            $(data['selector']).css("display", "block");
+        } else {
+            this.removeClass("active");
+            $(data['selector']).css("display", "none");
+        }
+        data['current'] = value;
+    }
+    $.extend(hintData, {
+        setValue : func,
+        selector : '.hint-lable',
+    });
+    $.extend(shortcutData, {
+        setValue : func,
+        selector : '.shortcut-lable',
+    });
+    $controller.set('hint', hintData);
+    $controller.set('shortcut', shortcutData);
+    'hint,shortcut'.replace($controller.reach, function(name) {
+        $controller.do(name, function($obj, data) {
+            $obj.click(function() {
+                data.setValue.call($(this), !$(this).hasClass("active"), data);
+            });
+        });
+    });
+    $("[hint]").each(function(){
+        var $this = $(this);
+        $this.append('<div class="hint-lable ' + hintData['type'] + '">' + $this.attr('hint') + '</div>');
+        $this.addClass("hinted");
+    });
+};
+
 /*******************
 * controller
 ********************/
@@ -218,10 +461,10 @@ function controllerWeakMap (k_obj) {
 controllerWeakMap.prototype = {
     update : function(objs) {
         for(var key in objs) {
-            if (objs[key].data("__control__name__")) {
-                objs[key].data("__control__name__").push(key);
+            if (objs[key].data("__control__")) {
+                objs[key].data("__control__").push(key);
             } else {
-                objs[key].data("__control__name__", [key]);    
+                objs[key].data("__control__", [key]);    
             };
             this._k_obj[key] = objs[key];
             if(!!!this._k_v[key]){
@@ -230,27 +473,23 @@ controllerWeakMap.prototype = {
         }
     },
     set : function(obj, value) {
-        obj = this._getObj(obj);
-        if (obj) {
-            var _name = obj.data("__control__name__");
-            if (_name) {
-                _name = _name[0];
-            };
-        };
+        if (typeof obj == "string") {
+            var _name = obj;
+        } else {
+            _name = this._getName(obj);
+        }
         if (_name) {
             this._k_v[_name] = value;
         };
     },
     get : function(obj) {
-        obj = this._getObj(obj);
-        if (obj) {
-            var _ret = obj.data("__control__name__");
-            if (_ret) {
-                _ret = _ret[0];
-            };
-        };
+        if (typeof obj == "string") {
+            var _ret = obj;
+        } else {
+            _ret = this._getName(obj);
+        }
         if (_ret) {
-            _ret = this._k_v[_ret]
+            _ret = this._k_v[_ret];
         };
         return _ret;
     },
@@ -259,7 +498,14 @@ controllerWeakMap.prototype = {
             obj = this._k_obj[obj];
         };
         return obj;
-    }
+    },
+    _getName : function(obj) {
+        var _ret = obj.data("__control__");
+        if (_ret) {
+            return _ret[0];
+        };
+        return undefined;
+    },
 }
 
 function controller (map) {
@@ -269,11 +515,45 @@ function controller (map) {
 
     this.bind = function(obj, eventType, handler) {
         obj = this._getObj(obj);
-        obj.bind(eventType, handler);
+        if (obj) {
+            obj.bind(eventType, handler);
+        };
     };
     this.do = function(obj, handler) {
         obj = this._getObj(obj);
-        handler(obj, this.get(obj), this);
+        if (obj) {
+            handler(obj, this.get(obj), this);
+        };
+    };
+    this.attach = function(obj, funcName, handler) {
+        obj = this._getObj(obj);
+        if (obj) {
+            var _name = obj.data("__control__");
+            if (_name) {
+                _name = _name[0];
+            };
+            if (_name) {
+                var _data = this._k_v[_name];
+                funcName = "__func__" + funcName;
+                var _attach = {};
+                _attach[funcName] = handler;
+                $.extend(_data, _attach);
+            };
+        };
+    };
+    this.invoke = function(obj, funcName) {
+        obj = this._getObj(obj);
+        var _data = this.get(obj);
+        if (_data) {
+            var handler = _data["__func__" + funcName];
+            if (handler) {
+                var args = [].slice.call(arguments);
+                args.shift();
+                args.shift();
+                args.push(_data);
+                handler.apply(obj, args);
+            };    
+        };
     };
 };
 controller.prototype = new controllerWeakMap();

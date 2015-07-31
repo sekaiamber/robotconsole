@@ -137,10 +137,16 @@ body
 	display: table-cell;
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
+	position: relative;
 }
 .row .metro-block.last
 {
 	border-right: 0px !important;
+}
+.row .metro-block .camera-angle
+{
+	height: 100%;
+	width: 100%;
 }
 .picture
 {
@@ -150,7 +156,7 @@ body
 .showboard.part-1 .metro-block
 {
 	width: 150px;
-	height: 130px;
+	height: 127px;
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
 }
@@ -167,25 +173,81 @@ body
 {
 	width: 160px;
 	height: 640px;
+	position: relative;
 }
 .showboard.part-2 .metro-block
 {
 	width: 160px;
 	height: 159px;
-	border-width: 0px;
-	border-bottom: #161d28 solid 1px;
-	border-left: #161d28 solid 1px;
-	position: relative;
+	border: #161d28 solid 1px;
+	position: absolute;
 	left: -1px;
-	background: #00ff00;
+	background: #2a313b;
+	overflow: hidden;
 }
-.showboard.part-2 .metro-block.last
+.showboard.part-2 .metro-block canvas
 {
-	border-bottom: 0px !important;
+	width: 320px;
+	height: 160px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.showboard.part-2 .metro-block.sb-right-2
+{
+	top: 160px;
+}
+.showboard.part-2 .metro-block.sb-right-3
+{
+	top: 320px;
+}
+.showboard.part-2 .metro-block.sb-right-4
+{
+	top: 480px;
 }
 .console .cnsl-block.last
 {
 	border-right: 0px;
+}
+.zone-2 div
+{
+	float: left;
+}
+.zone-2 .metro-block
+{
+	height: 100%;
+}
+.zone-2 .bt-showinfo
+{
+	width: 150px;
+	border-width: 0px;
+	border-right: #161d28 solid 1px;
+	overflow: hidden;
+}
+.bt-showinfo .rotatecontainer
+{
+	transform:rotate(45deg) translate(-45px, 0px);
+	-ms-transform:rotate(45deg) translate(-45px, 0px); 	/* IE 9 */
+	-moz-transform:rotate(45deg) translate(-45px, 0px); 	/* Firefox */
+	-webkit-transform:rotate(45deg) translate(-45px, 0px); /* Safari 和 Chrome */
+	-o-transform:rotate(45deg) translate(-45px, 0px); 	/* Opera */
+}
+.bt-showinfo .rotatecontainer>div
+{
+	height: 106px;
+	width: 213px;
+	border-bottom: #161d28 solid 1px;
+	text-align: center;
+	line-height: 106px;
+	overflow: hidden;
+}
+.bt-showinfo .hint
+{
+	
+}
+.bt-showinfo .shortcut
+{
+	
 }
 
 /*********
@@ -256,7 +318,8 @@ body
 	cursor: pointer;
 	color: #626B7B;
 }
-.metro-bt.hover
+.metro-bt.hover,
+.metro-bt.active
 {
 	background: #343B47;
 	color: #BCC5D5;
@@ -264,6 +327,45 @@ body
 .metro-bt.press
 {
 	background: #424954 !important;
+}
+
+/*********
+* mask
+**********/
+.hint-lable,
+.shortcut-lable
+{
+	position: absolute;
+	background: rgba(0,0,0,.3);
+	font-size: 16px;
+	color: #BCC5D5 !important;
+	display: none;
+	/* padding: 2px 3px; */
+}
+.hint-lable
+{
+	width: 100%;
+	text-align: center;
+}
+.tl,
+.tr
+{
+	top: 0;
+}
+.dl,
+.dr
+{
+	bottom: 0;
+}
+.tl,
+.dl
+{
+	left: 0;
+}
+.tr,
+.dr
+{
+	right: 0;
 }
 
 /*********
@@ -327,4 +429,26 @@ body
 	text-align: center;
 	line-height: 130px;
 	font-size: 50px;
+}
+.zone-2 .rotatecontainer .iconfont
+{
+	height: 100%;
+	width: 100%;
+	font-size: 25px;
+}
+.zone-2 .rotatecontainer .hint .iconfont
+{
+	transform:rotate(-45deg) translate(-8px, 8px);
+	-ms-transform:rotate(-45deg) translate(-8px, 8px); 	/* IE 9 */
+	-moz-transform:rotate(-45deg) translate(-8px, 8px); 	/* Firefox */
+	-webkit-transform:rotate(-45deg) translate(-8px, 8px); /* Safari 和 Chrome */
+	-o-transform:rotate(-45deg) translate(-8px, 8px); 	/* Opera */
+}
+.zone-2 .rotatecontainer .shortcut .iconfont
+{
+	transform:rotate(-45deg) translate(8px, -8px);
+	-ms-transform:rotate(-45deg) translate(8px, -8px); 	/* IE 9 */
+	-moz-transform:rotate(-45deg) translate(8px, -8px); 	/* Firefox */
+	-webkit-transform:rotate(-45deg) translate(8px, -8px); /* Safari 和 Chrome */
+	-o-transform:rotate(-45deg) translate(8px, -8px); 	/* Opera */
 }
