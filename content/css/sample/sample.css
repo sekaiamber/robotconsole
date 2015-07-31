@@ -137,6 +137,7 @@ body
 	display: table-cell;
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
+	position: relative;
 }
 .row .metro-block.last
 {
@@ -155,7 +156,7 @@ body
 .showboard.part-1 .metro-block
 {
 	width: 150px;
-	height: 130px;
+	height: 127px;
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
 }
@@ -329,6 +330,45 @@ body
 }
 
 /*********
+* mask
+**********/
+.hint-lable,
+.shortcut-lable
+{
+	position: absolute;
+	background: rgba(0,0,0,.3);
+	font-size: 16px;
+	color: #BCC5D5 !important;
+	display: none;
+	/* padding: 2px 3px; */
+}
+.hint-lable
+{
+	width: 100%;
+	text-align: center;
+}
+.tl,
+.tr
+{
+	top: 0;
+}
+.dl,
+.dr
+{
+	bottom: 0;
+}
+.tl,
+.dl
+{
+	left: 0;
+}
+.tr,
+.dr
+{
+	right: 0;
+}
+
+/*********
 * fonts
 **********/
 @font-face
@@ -394,7 +434,7 @@ body
 {
 	height: 100%;
 	width: 100%;
-	font-size: 40px;
+	font-size: 25px;
 }
 .zone-2 .rotatecontainer .hint .iconfont
 {

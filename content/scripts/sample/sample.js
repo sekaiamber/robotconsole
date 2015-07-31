@@ -31,6 +31,8 @@ $(document).ready(function(){
         galvano : $(".metro-block.sb-right-3 .canvas-container").first(),
         power : $(".metro-block.sb-right-4 .canvas-container").first(),
         cameraAngle : $(".metro-block .camera-angle").first(),
+        hint : $(".metro-bt.hint").first(),
+        shortcut : $(".metro-bt.shortcut").first(),
     }
     var $controller = controllerInit(controllerMap);
     menuInit($controller);
@@ -117,6 +119,12 @@ $(document).ready(function(){
         maskColor : '#bcc5d5',
         textColor : '#ddd',
         activeAngle : 20
+    });
+    maskInit($controller, {
+        current : false,
+        type : 'dl'
+    }, {
+        current : false
     });
 });
 
@@ -404,8 +412,43 @@ function cameraAngleInit($controller, data) {
     $controller.attach('cameraAngle', "draw", function(value, data){
         data.setValue.call(this , value, data);
     });
-    //    console.log($(".metro-block .camera-angle").first());
     $controller.invoke('cameraAngle', "draw", data['current']);
+};
+
+function maskInit($controller, hintData, shortcutData) {
+    var func = function(value, data) {
+        console.log($(data['selector']));
+        if (value) {
+            this.addClass("active");
+            $(data['selector']).css("display", "block");
+        } else {
+            this.removeClass("active");
+            $(data['selector']).css("display", "none");
+        }
+        data['current'] = value;
+    }
+    $.extend(hintData, {
+        setValue : func,
+        selector : '.hint-lable',
+    });
+    $.extend(shortcutData, {
+        setValue : func,
+        selector : '.shortcut-lable',
+    });
+    $controller.set('hint', hintData);
+    $controller.set('shortcut', shortcutData);
+    'hint,shortcut'.replace($controller.reach, function(name) {
+        $controller.do(name, function($obj, data) {
+            $obj.click(function() {
+                data.setValue.call($(this), !$(this).hasClass("active"), data);
+            });
+        });
+    });
+    $("[hint]").each(function(){
+        var $this = $(this);
+        $this.append('<div class="hint-lable ' + hintData['type'] + '">' + $this.attr('hint') + '</div>');
+        $this.addClass("hinted");
+    });
 };
 
 /*******************
