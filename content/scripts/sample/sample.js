@@ -126,6 +126,16 @@ $(document).ready(function(){
     }, {
         current : false
     });
+    shortcutInit($controller, {
+        name : 'default',
+        mapping : [
+            { type: 'hold', mask: 'Ctrl+Up', target: 'light', invoke: 'lightUp', lable: 'tr'},
+            { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', lable: 'tl'},
+            { type: 'hold', mask: 'Q', target: 'float', invoke: 'clickDown', lable: 'tl'},
+            { type: 'up', mask: 'Q', target: 'float', invoke: 'clickUp', lable: 'tl'},
+            // { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', lable: 'tl'},
+        ]
+    });
 });
 
 /*******************
@@ -279,8 +289,10 @@ function shiftInit($controller, data) {
 function lightInit($controller, data) {
     $.extend(data, {
         setValue : function(value, data) {
-            $(".current", this).css('width', (value * 100) + "%");
-            data['current'] = value;
+            var _v = value * 100;
+            _v =  _v > 100 ? 100 : (_v < 0 ? 0 : _v)
+            $(".current", this).css('width', _v + "%");
+            data['current'] = _v / 100;
         },
         hoverValue : function(value, data) {
             $(".mask", this).css('width', (value * 100) + "%");
@@ -303,6 +315,13 @@ function lightInit($controller, data) {
         $obj.mousemove(function(e){
             var clickX = e.offsetX;
             data.hoverValue.call($(this), clickX / $(this).width(), data);
+        });
+        // invoke.
+        $controller.attach("light", "lightUp", function(data){
+            data.setValue.call(this ,data['current'] + 0.05, data);
+        });
+        $controller.attach("light", "lightDown", function(data){
+            data.setValue.call(this ,data['current'] - 0.05, data);
         });
     });
 };
@@ -450,6 +469,28 @@ function maskInit($controller, hintData, shortcutData) {
     });
 };
 
+function shortcutInit($controller, data) {
+    for (var i = 0; i < data.mapping.length; i++) {
+        (function(type, mask, target, invoke, lable) {
+            $.Shortcuts.add({
+                type: type,
+                mask: mask,
+                handler: function() {
+                    $controller.invoke(target, invoke);
+                },
+                list: data.name
+            });
+            $controller.do(target, function($obj, data){
+                var _m = mask.replace('+', '');
+                if ($(".shortcut-lable[shortcut=" + _m + "]", $obj).length == 0) {
+                    $obj.append('<div class="shortcut-lable ' + lable + '" shortcut="' + _m + '">' + mask + '</div>');
+                };
+            });
+        })(data.mapping[i]['type'], data.mapping[i]['mask'], data.mapping[i]['target'], data.mapping[i]['invoke'], data.mapping[i]['lable']);
+    };
+    $.Shortcuts.start(data.name);    
+};
+
 /*******************
 * controller
 ********************/
@@ -468,7 +509,7 @@ controllerWeakMap.prototype = {
             };
             this._k_obj[key] = objs[key];
             if(!!!this._k_v[key]){
-                this._k_v[key] = undefined;
+                this._k_v[key] = {};
             }
         }
     },
