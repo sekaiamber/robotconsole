@@ -160,6 +160,10 @@ body
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
 }
+.showboard.part-1 .metro-block.last
+{
+	width: 151px;
+}
 .showboard.part-1 .row
 {
 	border-width: 0px;
@@ -184,6 +188,7 @@ body
 	left: -1px;
 	background: #2a313b;
 	overflow: hidden;
+	border-right: 0px;
 }
 .showboard.part-2 .metro-block canvas
 {
@@ -216,6 +221,20 @@ body
 .zone-2 .metro-block
 {
 	height: 100%;
+	position: relative;
+}
+.zone-2 .bt-scrn
+{
+	width: 151px;
+	border-width: 0px;
+	border-right: #161d28 solid 1px;
+}
+.zone-2 .bt-download
+{
+	float: right;
+	width: 160px;
+	border-width: 0px;
+	border-left: #161d28 solid 1px;
 }
 .zone-2 .bt-showinfo
 {
@@ -407,6 +426,8 @@ body
 .icon-turnleft:before { content: "\e60b"; }
 .icon-turnright:before { content: "\e60c"; }
 .icon-reset:before { content: "\e60d"; }
+.icon-scrn:before { content: "\e60e"; }
+.icon-download:before { content: "\e60f"; }
 
 .menu-item .iconfont
 {
@@ -454,4 +475,13 @@ body
 	-moz-transform:rotate(-45deg) translate(8px, -8px); 	/* Firefox */
 	-webkit-transform:rotate(-45deg) translate(8px, -8px); /* Safari 和 Chrome */
 	-o-transform:rotate(-45deg) translate(8px, -8px); 	/* Opera */
+}
+.zone-2 .bt-scrn .iconfont,
+.zone-2 .bt-download .iconfont
+{
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	line-height: 150px;
+	font-size: 50px;
 }
