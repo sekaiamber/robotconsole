@@ -36,8 +36,11 @@ $(document).ready(function(){
         cameraAngle : $(".metro-block .camera-angle").first(),
         hint : $(".metro-bt.hint").first(),
         shortcut : $(".metro-bt.shortcut").first(),
+        printScreen : $(".metro-bt.bt-scrn").first(),
+        download : $(".metro-bt.bt-download").first(),
     }
     var $controller = controllerInit(controllerMap);
+    window.$controller = $controller;
     menuInit($controller);
     sbRightInit($controller);
     shiftInit($controller, {

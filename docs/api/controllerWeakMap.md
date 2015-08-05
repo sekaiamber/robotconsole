@@ -64,4 +64,4 @@ map.get("button2");
 ```
 
 *Note*
-If you get data of a DOM which is not marked in `controllerWeakMap`'s initialization or by `update` function, it will return `undefined`.
+If you get data of a DOM which is not marked in `controllerWeakMap`'s initialization or by `update` function, it will return `{}`.
