@@ -64,4 +64,32 @@ map.get("button2");
 ```
 
 *Note*
-If you get data of a DOM which is not marked in `controllerWeakMap`'s initialization or by `update` function, it will return `undefined`.
+If you get data of a DOM which is not marked in `controllerWeakMap`'s initialization or by `update` function, it will return `{}`.
+
+### controllerWeakMap._getObj(obj)
+
+| parameter | type | description |
+| --- | --- | --- |
+| obj | jQuery Object or alias | DOM's alias that want to get its DOM. |
+
+*Example*
+```javascript
+map._getObj("button1");
+```
+
+*Note*
+If `obj` is not a `string`, this function will return `obj` itself.
+
+### controllerWeakMap._getName(obj)
+
+| parameter | type | description |
+| --- | --- | --- |
+| obj | jQuery Object | DOM that want to get its alias. |
+
+*Example*
+```javascript
+map._getObj("button1");
+```
+
+*Note*
+If `obj` is not a `jQuery Object` or it is not marked in `controllerWeakMap`, this function will return `undefined`.
