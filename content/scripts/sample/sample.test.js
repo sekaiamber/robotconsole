@@ -164,11 +164,11 @@ var testCase = {
         var result = true;
         var hint = $controller._getObj('hint');
         hint.click();
-        result = result && ($(".hint-lable.active").length > 0);
+        result = result && ($(".hint-label.active").length > 0);
         hint.click();
         hint = $controller._getObj('shortcut');
         hint.click();
-        result = result && ($(".shortcut-lable.active").length > 0);
+        result = result && ($(".shortcut-label.active").length > 0);
         hint.click();
         handler("test_mask_change", result);
     }
