@@ -4,6 +4,19 @@
 
 This document will show all controls that in the page, and list their initialize function and its parameters.
 
+## index
+
+* [clock](#clock)
+* [menu items](#menu-items)
+* [data board in the right](#data-board-in-the-right)
+* [propeller transmission](#propeller-transmission)
+* [light control](#light-control)
+* [process circle](#process-circle)
+* [camera angle](#camera-angle)
+* [mask control](#mask-control)
+* [shortcut system](#shortcut-system)
+* [buttons](#buttons)
+
 ### clock
 
 * **In $controller:** No
