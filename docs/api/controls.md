@@ -6,10 +6,10 @@ This document will show all controls that in the page, and list their initialize
 
 ### clock
 
-* **Control: ** clock
-* **In $controller: ** No
-* **Init function: ** clockInit()
-* **Init parameters: **
+* **Control:** clock
+* **In $controller:** No
+* **Init function:** clockInit()
+* **Init parameters:**
 
 | parameter | type | description |
 | --- | --- | --- |
