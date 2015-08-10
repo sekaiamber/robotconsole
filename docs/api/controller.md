@@ -59,7 +59,7 @@ $controller.do("button1", function($obj, data){
 | --- | --- | --- |
 | obj | jQuery Object or alias | DOM that want to attach function. |
 | funcName | string | name of attached function. |
-| handler | function | a function to attach to the `obj`, `this` in the handler is point to the DOM object refer to the prev parameter `obj`, and you can set the handler's parameters as you like. |
+| handler | function | a function to attach to the `obj`, `this` in the handler is point to the DOM object refer to the prev parameter `obj`, and you can set the handler's parameters as you like, and `controller.invoke` will send `obj`'s data as the last parameter automatically. |
 
 *Example*
 ```javascript
