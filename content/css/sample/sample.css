@@ -351,8 +351,8 @@ body
 /*********
 * mask
 **********/
-.hint-lable,
-.shortcut-lable
+.hint-label,
+.shortcut-label
 {
 	position: absolute;
 	background: rgba(0,0,0,.3);
@@ -360,12 +360,17 @@ body
 	color: #BCC5D5 !important;
 	display: none;
 }
-.hint-lable
+.hint-label.active,
+.shortcut-label.active
+{
+	display: block;
+}
+.hint-label
 {
 	width: 100%;
 	text-align: center;
 }
-.shortcut-lable
+.shortcut-label
 {
 	padding: 4px;
 }

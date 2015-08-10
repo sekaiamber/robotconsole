@@ -122,7 +122,6 @@ $(document).ready(function(){
         radius : 70,
         backgroundColor : '#383F4C',
         foregroundColor : '#596579',
-        maskColor : '#bcc5d5',
         textColor : '#ddd',
         activeAngle : 20
     });
@@ -135,29 +134,29 @@ $(document).ready(function(){
     shortcutInit($controller, {
         name : 'default',
         mapping : [
-            { type: 'hold', mask: 'Ctrl+Up', target: 'light', invoke: 'lightUp', lable: 'tr'},
-            { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', lable: 'tl'},
-            { type: 'hold', mask: 'Q', target: 'float', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'Q', target: 'float', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'W', target: 'ahead', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'W', target: 'ahead', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'E', target: 'dive', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'E', target: 'dive', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'A', target: 'left', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'A', target: 'left', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'S', target: 'back', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'S', target: 'back', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'D', target: 'right', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'D', target: 'right', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'X', target: 'stopAll', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'X', target: 'stopAll', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'Left', target: 'cameraLeft', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'Left', target: 'cameraLeft', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'Right', target: 'cameraRight', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'Right', target: 'cameraRight', invoke: 'clickUp', lable: 'tl'},
-            { type: 'hold', mask: 'R', target: 'cameraReset', invoke: 'clickDown', lable: 'tl'},
-            { type: 'up', mask: 'R', target: 'cameraReset', invoke: 'clickUp', lable: 'tl'},
-            // { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', lable: 'tl'},
+            { type: 'hold', mask: 'Ctrl+Up', target: 'light', invoke: 'lightUp', label: 'tr'},
+            { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', label: 'tl'},
+            { type: 'hold', mask: 'Q', target: 'float', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'Q', target: 'float', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'W', target: 'ahead', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'W', target: 'ahead', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'E', target: 'dive', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'E', target: 'dive', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'A', target: 'left', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'A', target: 'left', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'S', target: 'back', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'S', target: 'back', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'D', target: 'right', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'D', target: 'right', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'X', target: 'stopAll', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'X', target: 'stopAll', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'Left', target: 'cameraLeft', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'Left', target: 'cameraLeft', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'Right', target: 'cameraRight', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'Right', target: 'cameraRight', invoke: 'clickUp', label: 'tl'},
+            { type: 'hold', mask: 'R', target: 'cameraReset', invoke: 'clickDown', label: 'tl'},
+            { type: 'up', mask: 'R', target: 'cameraReset', invoke: 'clickUp', label: 'tl'},
+            // { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', label: 'tl'},
         ]
     });
 });
@@ -277,6 +276,7 @@ function shiftInit($controller, data) {
             level -= 1;
             $(".shift-item:gt(" + level + ")", this).removeClass("active");
             data['current'] = level + 1;
+            $controller.invoke("shift", "afterSetLevel", level);
         },
         hoverLevel : function(level, data) {
             $(".shift-item:lt(" + level + ")", this).addClass("hover");
@@ -317,6 +317,7 @@ function lightInit($controller, data) {
             _v =  _v > 100 ? 100 : (_v < 0 ? 0 : _v)
             $(".current", this).css('width', _v + "%");
             data['current'] = _v / 100;
+            $controller.invoke("light", "afterSetValue", data['current']);
         },
         hoverValue : function(value, data) {
             $(".mask", this).css('width', (value * 100) + "%");
@@ -462,20 +463,20 @@ function maskInit($controller, hintData, shortcutData) {
     var func = function(value, data) {
         if (value) {
             this.addClass("active");
-            $(data['selector']).css("display", "block");
+            $(data['selector']).addClass("active");
         } else {
             this.removeClass("active");
-            $(data['selector']).css("display", "none");
+            $(data['selector']).removeClass("active");
         }
         data['current'] = value;
     }
     $.extend(hintData, {
         setValue : func,
-        selector : '.hint-lable',
+        selector : '.hint-label',
     });
     $.extend(shortcutData, {
         setValue : func,
-        selector : '.shortcut-lable',
+        selector : '.shortcut-label',
     });
     $controller.set('hint', hintData);
     $controller.set('shortcut', shortcutData);
@@ -488,14 +489,14 @@ function maskInit($controller, hintData, shortcutData) {
     });
     $("[hint]").each(function(){
         var $this = $(this);
-        $this.append('<div class="hint-lable ' + hintData['type'] + '">' + $this.attr('hint') + '</div>');
+        $this.append('<div class="hint-label ' + hintData['type'] + '">' + $this.attr('hint') + '</div>');
         $this.addClass("hinted");
     });
 };
 
 function shortcutInit($controller, data) {
     for (var i = 0; i < data.mapping.length; i++) {
-        (function(type, mask, target, invoke, lable) {
+        (function(type, mask, target, invoke, label) {
             $.Shortcuts.add({
                 type: type,
                 mask: mask,
@@ -506,11 +507,11 @@ function shortcutInit($controller, data) {
             });
             $controller.do(target, function($obj, data){
                 var _m = mask.replace('+', '');
-                if ($(".shortcut-lable[shortcut=" + _m + "]", $obj).length == 0) {
-                    $obj.append('<div class="shortcut-lable ' + lable + '" shortcut="' + _m + '">' + mask + '</div>');
+                if ($(".shortcut-label[shortcut=" + _m + "]", $obj).length == 0) {
+                    $obj.append('<div class="shortcut-label ' + label + '" shortcut="' + _m + '">' + mask + '</div>');
                 };
             });
-        })(data.mapping[i]['type'], data.mapping[i]['mask'], data.mapping[i]['target'], data.mapping[i]['invoke'], data.mapping[i]['lable']);
+        })(data.mapping[i]['type'], data.mapping[i]['mask'], data.mapping[i]['target'], data.mapping[i]['invoke'], data.mapping[i]['label']);
     };
     $.Shortcuts.start(data.name);    
 };
