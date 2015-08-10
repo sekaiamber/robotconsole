@@ -162,11 +162,15 @@ Shortcut system using a `mapping` object to manager all shortcut in the page. It
 Supported keys:
 
 **Modifiers**: Ctrl, Shift, Alt
+
 **Numbers**: 0—9
+
 **Letters**: A—Z (case-insensitive)
+
 **Special**: Backspace, Tab, Enter, Pause, CapsLock, Esc, Space, PageUp, PageDown, End, Home, Left, Up, Right, Down, Insert, Delete, F1—F12, ? (Question Mark), Minus, Plus
 
 Using '+' to support key combinations.
+
 Using ',' to support multiple key combinations.
 
 *Example*
@@ -213,6 +217,5 @@ $controller.bind("button1", "click", function(){
 $controller.attach("button1", "clickDown", function(){
     this.click();
 });
-
 // when press key mapping in shortcut system, console will print 'fire'.
 ```
