@@ -67,6 +67,7 @@ $controller.attach("button1", "foo",function(message1, message2){
     this.html(message1 + message2);
 });
 // when the handler executed using `controller.invoke`, html of `button1` will change to the given string.
+```
 
 *Note*
 In fact, all function that using `controller.attach` is attach to the DOM's data in `controller` by add prefix '__func__'.
@@ -85,6 +86,7 @@ In fact, all function that using `controller.attach` is attach to the DOM's data
 ```javascript
 $controller.invoke("button1", "foo", "bar1", "bar2");
 // refer to the example of `controller.attach`, html of `button1` will change to the given string(`bar1bar2`).
+```
 
 *Also see*
 * controller.attach
