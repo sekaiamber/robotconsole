@@ -108,6 +108,29 @@ var testCase = {
         result = result && data['power']['dataQueue'][data['power']['dataQueueLength'] - 1] == 30;
         handler("test_show_board_right_change_value", result);
     },
+    test_show_board_right_push_value : function(handler) {
+        setTimeout(function(){
+            var data;
+            var result = true;
+            $controller.invoke("connection", "draw", 0);
+            var dom = $controller._getObj("sbR1");
+            dom.mouseenter();
+            var func = function(cb, time, result){
+                if (time == 50) {
+                    handler("test_show_board_right_push_value", result);
+                    dom.mouseleave();
+                    return;
+                };
+                var data = $controller.get('connection');
+                setTimeout(function(){
+                    $controller.invoke('connection', "draw", data['connection']['current']+2);
+                    result = result && (data['connection']['current'] == time * 2 + 2)
+                    cb(func, time+1, result)
+                }, 100);
+            }
+            func(func, 0, true);
+        }, 3000);
+    },
     test_shift_change : function(handler) {
         $(".shift-item:eq(2)").click();
         handler("test_shift_change", $(".shift-item.active").length == 3);
@@ -121,6 +144,34 @@ var testCase = {
         var data = $controller.get("light");
         handler("test_light_change", 200 / dom.width() == data['current']);
     },
+    test_camera_angle_change : function(handler) {
+        $controller.invoke('cameraAngle', "draw", -60);
+        var func = function(cb, time, result){
+            if (time == 40) {
+                handler("test_camera_angle_change", result);
+                return;
+            };
+            var data = $controller.get('cameraAngle');
+            setTimeout(function(){
+                $controller.invoke('cameraAngle', "draw", data['current']+3);
+                result = result && (data['current'] == time * 3 - 57)
+                cb(func, time+1, result)
+            }, 100);
+        }
+        func(func, 0, true);
+    },
+    test_mask_change : function(handler) {
+        var result = true;
+        var hint = $controller._getObj('hint');
+        hint.click();
+        result = result && ($(".hint-lable.active").length > 0);
+        hint.click();
+        hint = $controller._getObj('shortcut');
+        hint.click();
+        result = result && ($(".shortcut-lable.active").length > 0);
+        hint.click();
+        handler("test_mask_change", result);
+    }
 }
 
 

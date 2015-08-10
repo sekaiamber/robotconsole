@@ -360,6 +360,11 @@ body
 	color: #BCC5D5 !important;
 	display: none;
 }
+.hint-lable.active,
+.shortcut-lable.active
+{
+	display: block;
+}
 .hint-lable
 {
 	width: 100%;

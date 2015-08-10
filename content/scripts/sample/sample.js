@@ -462,10 +462,10 @@ function maskInit($controller, hintData, shortcutData) {
     var func = function(value, data) {
         if (value) {
             this.addClass("active");
-            $(data['selector']).css("display", "block");
+            $(data['selector']).addClass("active");
         } else {
             this.removeClass("active");
-            $(data['selector']).css("display", "none");
+            $(data['selector']).removeClass("active");
         }
         data['current'] = value;
     }
