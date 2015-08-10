@@ -70,7 +70,7 @@ $controller.attach("button1", "foo",function(message1, message2){
 ```
 
 *Note*
-In fact, all function that using `controller.attach` is attach to the DOM's data in `controller` by add prefix '__func__'.
+In fact, all function that using `controller.attach` is attach to the DOM's data in `controller` by add prefix '\_\_func\_\_'.
 
 *Also see*
 * controller.invoke
