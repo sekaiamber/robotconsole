@@ -152,6 +152,8 @@ body
 {
 	height: 640px;
 	width: 800px;
+	position: relative;
+	overflow: hidden;
 }
 .showboard.part-1 .metro-block
 {
@@ -375,24 +377,62 @@ body
 	padding: 4px;
 }
 .tl,
-.tr
+.tr,
+.tc
 {
 	top: 0;
 }
-.dl,
-.dr
+.bl,
+.br,
+.bc
 {
 	bottom: 0;
 }
 .tl,
-.dl
+.bl
 {
 	left: 0;
 }
 .tr,
-.dr
+.br
 {
 	right: 0;
+}
+.tc,
+.bc
+{
+	left: -50%;
+/*	right: 50%;*/
+}
+
+/*********
+* messager
+**********/
+.msg-box
+{
+	position: absolute;
+}
+.msg-item
+{
+	width: 400px;
+	background: white;
+	border: #161d28 solid 1px;
+	background: #2a313b;
+	position: relative;
+}
+.msg-box-center
+{
+	position: absolute;
+	width: 50%;
+}
+.msg-box-center.tc
+{
+	left: 50%;
+}
+.msg-box-center.bc
+{
+	left: 50%;
+	bottom: 0;
 }
 
 /*********
