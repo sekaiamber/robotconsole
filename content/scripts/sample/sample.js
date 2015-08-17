@@ -38,7 +38,8 @@ $(document).ready(function(){
         shortcut : $(".metro-bt.shortcut").first(),
         printScreen : $(".metro-bt.bt-scrn").first(),
         download : $(".metro-bt.bt-download").first(),
-    }
+        messageContainer : $(".cnsl-block .picture").first()
+    };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
     menuInit($controller);
@@ -127,7 +128,7 @@ $(document).ready(function(){
     });
     maskInit($controller, {
         current : false,
-        type : 'dl'
+        type : 'bl'
     }, {
         current : false
     });
@@ -158,6 +159,17 @@ $(document).ready(function(){
             { type: 'up', mask: 'R', target: 'cameraReset', invoke: 'clickUp', label: 'tl'},
             // { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', label: 'tl'},
         ]
+    });
+    messagerInit($controller, {
+        type : 'tc',
+        levelTitle : {
+            debug : '调试',
+            info : '警告',
+            error : '错误',
+            critical : '严重错误'
+        },
+        level : ['debug', 'info', 'error', 'critical'],
+        stay : 5000,
     });
 });
 
@@ -515,6 +527,58 @@ function shortcutInit($controller, data) {
     };
     $.Shortcuts.start(data.name);    
 };
+
+function messagerInit($controller, data) {
+    var addMessage = function(level, message, data, type) {
+        type = type || data.type;
+        var $box = data.containers[type];
+        var center = type.indexOf('c') > -1;
+        var left = type.indexOf('l') > -1;
+        var right = type.indexOf('r') > -1;
+
+        var $msg = makeMessage(level, message);
+        $msg.css('display', 'none');
+        if (left) {
+            $msg.css('left', '-100%');
+        } else if (right) {
+            $msg.css('right', '-100%');
+        } else if (center) {
+            $msg.css('opacity', '0');
+        };
+
+        $box.prepend($box);
+        if (center) {
+            $msg
+                .velocity("slideDown", {duration: 300})
+                .velocity("fadeIn", {duration: 300})
+                .velocity("fadeOut", {delay: data.stay, duration: 300, complete: function(element){
+                    $(element).delete();
+                }});
+        } else if (left) {
+            $msg
+                .velocity("slideDown", {duration: 300})
+                .velocity({left: "0"}, {duration: 300})
+                .velocity({left: "-100%"}, {delay: data.stay, duration: 300, complete: function(element){
+                    $(element).delete();
+                }});
+        } else if (right) {
+            $msg
+                .velocity("slideDown", {duration: 300})
+                .velocity({right: "0"}, {duration: 300})
+                .velocity({right: "-100%"}, {delay: data.stay, duration: 300, complete: function(element){
+                    $(element).delete();
+                }});
+        };
+    };
+    $controller.do("messageContainer", function($obj, data){
+        
+    });
+};
+
+function makeMessage(level, msg) {
+    var ret = $("<div>" + msg + "</div>");
+    return ret;
+}
 
 /*******************
 * controller

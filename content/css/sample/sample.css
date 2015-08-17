@@ -375,22 +375,24 @@ body
 	padding: 4px;
 }
 .tl,
-.tr
+.tr,
+.tc
 {
 	top: 0;
 }
-.dl,
-.dr
+.bl,
+.br,
+.bc
 {
 	bottom: 0;
 }
 .tl,
-.dl
+.bl
 {
 	left: 0;
 }
 .tr,
-.dr
+.br
 {
 	right: 0;
 }
