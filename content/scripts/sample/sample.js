@@ -164,16 +164,15 @@ $(document).ready(function(){
         type : 'tc',
         levelTitle : {
             debug : '调试',
-            info : '警告',
+            info : '系统消息',
+            remind : '提醒',
+            warning : '警告',
             error : '错误',
             critical : '严重错误'
         },
-        level : ['debug', 'info', 'error', 'critical'],
+        level : ['debug', 'info', 'remind', 'warning', 'error', 'critical'],
         stay : 5000,
     });
-    $("#test").click(function(){
-        $controller.invoke("messageContainer", "message", "info", "alhlfkalsjf asfklas asflka fasflk asf jkl", "tl");
-    })
 });
 
 /*******************
@@ -549,6 +548,22 @@ function messagerInit($controller, data) {
             } else if (center) {
                 $msg.css('opacity', '0');
             };
+            $msg.hover(function(){
+                $(this).addClass("hover");
+            },function(){
+                $(this).removeClass("hover");
+            });
+            $msg.click(function(){
+                var $this = $(this);
+                if (!$this.hasClass("manual")) {
+                    $this.addClass("manual");
+                    $this
+                        .velocity("stop")
+                        .velocity("slideUp", {duration: 300, complete: function(element){
+                            $(element).remove();
+                        }})
+                };
+            });
 
             $box.prepend($msg);
             if (center) {
@@ -600,7 +615,7 @@ function messagerInit($controller, data) {
 };
 
 function makeMessage(level, msg) {
-    var ret = $('<div class="msg-item ' + level + '">' + msg +"</div>");
+    var ret = $('<div class="msg-item ' + level + '"><div class="msg-sign iconfont icon-' + level + '"></div><div class="msg-text">' + msg +"</div></div>");
     return ret;
 }
 

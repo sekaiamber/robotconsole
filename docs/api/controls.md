@@ -16,6 +16,7 @@ This document will show all controls that in the page, and list their initialize
 * [mask control](#mask-control)
 * [shortcut system](#shortcut-system)
 * [buttons](#buttons)
+* [message system](#message-system)
 
 ### clock
 
@@ -197,7 +198,7 @@ Using ',' to support multiple key combinations.
 
 **label position rule**
 
-This sign controls where the label is fix to its container(e.g. `div`).
+This sign controls where the label is fixed to its container(e.g. `div`).
 
 | sign | description |
 | --- | --- |
@@ -232,3 +233,75 @@ $controller.attach("button1", "clickDown", function(){
 });
 // when press key mapping in shortcut system, console will print 'fire'.
 ```
+
+### message system
+
+* **In $controller:** Yes
+* **$controller alias:** messageContainer
+* **Init function:** messagerInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| type | string | default message's position, see following message postion rule. |
+| level | array | a list of level name. |
+| levelTitle | array | a list of level name's title. |
+| stay | int(millisecond) | how many time a message will stay. |
+
+**message position rule**
+
+This sign controls where the message is fixed to its container(e.g. `div`).
+
+| sign | description |
+| --- | --- |
+| tl | top left. |
+| tc | top center. |
+| tr | top right. |
+| bl | bottom left. |
+| bc | bottom center. |
+| br | bottom right. |
+
+* **Function can Invoke:**
+  * message(level, message[, type])
+
+*Example*
+```javascript
+$controller.invoke("messageContainer", "message", "info", "Test message using default position");
+$controller.invoke("messageContainer", "message", "debug", "Test message on top left", "tl");
+```
+
+**How to: add a level to message system**
+
+1. add a level info to init function.
+2. passing its name when using `invoke`.
+3. add its style to CSS files.
+
+```javascript
+// add a new level
+messagerInit($controller, {
+    type : 'tc',
+    levelTitle : {
+        debug : '调试',
+        info : '系统消息',
+        remind : '提醒',
+        warning : '警告',
+        error : '错误',
+        critical : '严重错误',
+        testLevel : '新增项'
+    },
+    level : ['debug', 'info', 'remind', 'warning', 'error', 'critical', 'testLevel'],
+    stay : 5000,
+});
+
+// use invoke to pass message
+$controller.invoke("messageContainer", "message", "testLevel", "Testlevel message using default position");
+```
+
+```css
+/* add new level's style */
+.msg-sign.icon-testLevel:before { ... }
+```
+
+**message behavior**
+
+Normally, a message will come in and stay in its container for a given time(passing by init function), finally goes out by some way, it is called a event chain. But if manually **click** itself, it will break the event chain and stop it, and start to disappear. This is a tactics of dealing with so called 'message explosion'. If a lot of messages come out in a short time, the container will flooded with those messages, this will grab user‘s attention, we don't like this. So user do have the right to close the message by himself.

@@ -398,12 +398,6 @@ body
 {
 	right: 0;
 }
-.tc,
-.bc
-{
-	left: -50%;
-/*	right: 50%;*/
-}
 
 /*********
 * messager
@@ -412,13 +406,30 @@ body
 {
 	position: absolute;
 }
+.msg-box.tc,
+.msg-box.bc
+{
+	left: -125px;
+}
 .msg-item
 {
-	width: 400px;
+	width: 250px;
 	background: white;
 	border: #161d28 solid 1px;
 	background: #2a313b;
 	position: relative;
+	margin: 10px;
+	height: 75px;
+	cursor: pointer;
+}
+.msg-item:hover
+{
+	background: #343B47;
+}
+.msg-item>div
+{
+	display: table-cell;
+	vertical-align: middle;
 }
 .msg-box-center
 {
@@ -434,6 +445,22 @@ body
 	left: 50%;
 	bottom: 0;
 }
+.msg-sign
+{
+	height: 75px;
+	width: 75px;
+	text-align: center;
+}
+.msg-sign.iconfont:before
+{
+	font-size: 35px;
+}
+.msg-sign.icon-error:before { color: #C82619;}
+.msg-sign.icon-warning:before { color: #DBD337;}
+.msg-sign.icon-debug:before { color: #d8d8d8;}
+.msg-sign.icon-critical:before { color: #E03B2E;}
+.msg-sign.icon-remind:before { color: #d8d8d8;}
+.msg-sign.icon-info:before { color: #d8d8d8;}
 
 /*********
 * fonts
@@ -473,6 +500,12 @@ body
 .icon-reset:before { content: "\e60d"; }
 .icon-scrn:before { content: "\e60e"; }
 .icon-download:before { content: "\e60f"; }
+.icon-error:before { content: "\e610"; }
+.icon-warning:before { content: "\e611"; }
+.icon-debug:before { content: "\e612"; }
+.icon-critical:before { content: "\e613"; }
+.icon-remind:before { content: "\e614"; }
+.icon-info:before { content: "\e615"; }
 
 .menu-item .iconfont
 {
