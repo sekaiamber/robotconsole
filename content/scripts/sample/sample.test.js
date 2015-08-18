@@ -171,7 +171,19 @@ var testCase = {
         result = result && ($(".shortcut-label.active").length > 0);
         hint.click();
         handler("test_mask_change", result);
-    }
+    },
+    test_message_position : function(handler) {
+        var result = true;
+        $controller.invoke("messageContainer", "message", "debug", "Test message on top left", "tl");
+        $controller.invoke("messageContainer", "message", "info", "Test message on top center", "tc");
+        $controller.invoke("messageContainer", "message", "remind", "Test message on top right", "tr");
+        $controller.invoke("messageContainer", "message", "warning", "Test message on bottom right", "bl");
+        $controller.invoke("messageContainer", "message", "error", "Test message on bottom right", "bc");
+        $controller.invoke("messageContainer", "message", "critical", "Test message on bottom right", "br");
+        setTimeout(function(){
+            handler("test_message_position", result);
+        }, 3000);
+    },
 }
 
 

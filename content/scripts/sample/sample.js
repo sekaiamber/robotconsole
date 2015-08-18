@@ -38,7 +38,8 @@ $(document).ready(function(){
         shortcut : $(".metro-bt.shortcut").first(),
         printScreen : $(".metro-bt.bt-scrn").first(),
         download : $(".metro-bt.bt-download").first(),
-    }
+        messageContainer : $(".cnsl-block .picture").first()
+    };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
     menuInit($controller);
@@ -127,7 +128,7 @@ $(document).ready(function(){
     });
     maskInit($controller, {
         current : false,
-        type : 'dl'
+        type : 'bl'
     }, {
         current : false
     });
@@ -158,6 +159,19 @@ $(document).ready(function(){
             { type: 'up', mask: 'R', target: 'cameraReset', invoke: 'clickUp', label: 'tl'},
             // { type: 'hold', mask: 'Ctrl+Down', target: 'light', invoke: 'lightDown', label: 'tl'},
         ]
+    });
+    messagerInit($controller, {
+        type : 'tc',
+        levelTitle : {
+            debug : '调试',
+            info : '系统消息',
+            remind : '提醒',
+            warning : '警告',
+            error : '错误',
+            critical : '严重错误'
+        },
+        level : ['debug', 'info', 'remind', 'warning', 'error', 'critical'],
+        stay : 5000,
     });
 });
 
@@ -516,6 +530,95 @@ function shortcutInit($controller, data) {
     $.Shortcuts.start(data.name);    
 };
 
+function messagerInit($controller, data) {
+    $.extend(data, {
+        addMessage: function(level, message, data, type) {
+            type = type || data.type;
+            var $box = data.containers[type];
+            var center = type.indexOf('c') > -1;
+            var left = type.indexOf('l') > -1;
+            var right = type.indexOf('r') > -1;
+            console.log(type, left, center, right);
+            var $msg = makeMessage(level, message);
+            $msg.css('display', 'none');
+            if (left) {
+                $msg.css('left', '-100%');
+            } else if (right) {
+                $msg.css('right', '-100%');
+            } else if (center) {
+                $msg.css('opacity', '0');
+            };
+            $msg.hover(function(){
+                $(this).addClass("hover");
+            },function(){
+                $(this).removeClass("hover");
+            });
+            $msg.click(function(){
+                var $this = $(this);
+                if (!$this.hasClass("manual")) {
+                    $this.addClass("manual");
+                    $this
+                        .velocity("stop")
+                        .velocity("slideUp", {duration: 300, complete: function(element){
+                            $(element).remove();
+                        }})
+                };
+            });
+
+            $box.prepend($msg);
+            if (center) {
+                $msg
+                    .velocity("slideDown", {duration: 300})
+                    .velocity("fadeIn", {duration: 300})
+                    .velocity({"opacity": 0}, {delay: data.stay, duration: 300})
+                    .velocity("slideUp", {duration: 300, complete: function(element){
+                        $(element).remove();
+                    }});;
+            } else if (left) {
+                $msg
+                    .velocity("slideDown", {duration: 300})
+                    .velocity({left: "0"}, {duration: 300})
+                    .velocity({left: "-100%"}, {delay: data.stay, duration: 300})
+                    .velocity("slideUp", {duration: 300, complete: function(element){
+                        $(element).remove();
+                    }});
+            } else if (right) {
+                $msg
+                    .velocity("slideDown", {duration: 300})
+                    .velocity({right: "0"}, {duration: 300})
+                    .velocity({right: "-100%"}, {delay: data.stay, duration: 300})
+                    .velocity("slideUp", {duration: 300, complete: function(element){
+                        $(element).remove();
+                    }});
+            };
+        }
+    });
+    $controller.set("messageContainer", data);
+    $controller.do("messageContainer", function($obj, data){
+        data.containers = {};
+        "tl,tr,bl,br".replace($controller.reach, function(type) {
+            var $box = $('<div class="msg-box ' + type + '"></div>');
+            data.containers[type] = $box;
+            $obj.append($box);
+        });
+        "tc,bc".replace($controller.reach, function(type) {
+            var $box = $('<div class="msg-box ' + type + '"></div>');
+            var $boxCenter = $('<div class="msg-box-center ' + type + '"></div>')
+            $boxCenter.append($box);
+            data.containers[type] = $box;
+            $obj.append($boxCenter);
+        });
+    });
+    $controller.attach("messageContainer", "message", function(level, msg, type, data){
+        data.addMessage.call(this , level, msg, data, type);
+    }, 3);
+};
+
+function makeMessage(level, msg) {
+    var ret = $('<div class="msg-item ' + level + '"><div class="msg-sign iconfont icon-' + level + '"></div><div class="msg-text">' + msg +"</div></div>");
+    return ret;
+}
+
 /*******************
 * controller
 ********************/
@@ -591,7 +694,7 @@ function controller (map) {
             handler(obj, this.get(obj), this);
         };
     };
-    this.attach = function(obj, funcName, handler) {
+    this.attach = function(obj, funcName, handler, argsCount) {
         obj = this._getObj(obj);
         if (obj) {
             var _name = obj.data("__control__");
@@ -600,9 +703,11 @@ function controller (map) {
             };
             if (_name) {
                 var _data = this._k_v[_name];
-                funcName = "__func__" + funcName;
                 var _attach = {};
-                _attach[funcName] = handler;
+                _attach["__func__" + funcName] = handler;
+                if (argsCount) {
+                    _attach["__argsc__" + funcName] = argsCount;
+                };
                 $.extend(_data, _attach);
             };
         };
@@ -616,6 +721,11 @@ function controller (map) {
                 var args = [].slice.call(arguments);
                 args.shift();
                 args.shift();
+                if (_data["__argsc__" + funcName]) {
+                    for (var i = 0; i < _data["__argsc__" + funcName] - args.length; i++) {
+                        args.push(undefined);
+                    };
+                };
                 args.push(_data);
                 handler.apply(obj, args);
             };    

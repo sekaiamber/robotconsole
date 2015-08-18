@@ -152,6 +152,8 @@ body
 {
 	height: 640px;
 	width: 800px;
+	position: relative;
+	overflow: hidden;
 }
 .showboard.part-1 .metro-block
 {
@@ -375,25 +377,90 @@ body
 	padding: 4px;
 }
 .tl,
-.tr
+.tr,
+.tc
 {
 	top: 0;
 }
-.dl,
-.dr
+.bl,
+.br,
+.bc
 {
 	bottom: 0;
 }
 .tl,
-.dl
+.bl
 {
 	left: 0;
 }
 .tr,
-.dr
+.br
 {
 	right: 0;
 }
+
+/*********
+* messager
+**********/
+.msg-box
+{
+	position: absolute;
+}
+.msg-box.tc,
+.msg-box.bc
+{
+	left: -125px;
+}
+.msg-item
+{
+	width: 250px;
+	background: white;
+	border: #161d28 solid 1px;
+	background: #2a313b;
+	position: relative;
+	margin: 10px;
+	height: 75px;
+	cursor: pointer;
+}
+.msg-item:hover
+{
+	background: #343B47;
+}
+.msg-item>div
+{
+	display: table-cell;
+	vertical-align: middle;
+}
+.msg-box-center
+{
+	position: absolute;
+	width: 50%;
+}
+.msg-box-center.tc
+{
+	left: 50%;
+}
+.msg-box-center.bc
+{
+	left: 50%;
+	bottom: 0;
+}
+.msg-sign
+{
+	height: 75px;
+	width: 75px;
+	text-align: center;
+}
+.msg-sign.iconfont:before
+{
+	font-size: 35px;
+}
+.msg-sign.icon-error:before { color: #C82619;}
+.msg-sign.icon-warning:before { color: #DBD337;}
+.msg-sign.icon-debug:before { color: #d8d8d8;}
+.msg-sign.icon-critical:before { color: #E03B2E;}
+.msg-sign.icon-remind:before { color: #d8d8d8;}
+.msg-sign.icon-info:before { color: #d8d8d8;}
 
 /*********
 * fonts
@@ -433,6 +500,12 @@ body
 .icon-reset:before { content: "\e60d"; }
 .icon-scrn:before { content: "\e60e"; }
 .icon-download:before { content: "\e60f"; }
+.icon-error:before { content: "\e610"; }
+.icon-warning:before { content: "\e611"; }
+.icon-debug:before { content: "\e612"; }
+.icon-critical:before { content: "\e613"; }
+.icon-remind:before { content: "\e614"; }
+.icon-info:before { content: "\e615"; }
 
 .menu-item .iconfont
 {
