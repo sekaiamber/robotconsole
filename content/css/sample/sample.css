@@ -107,6 +107,11 @@ body
 	border-width: 0px;
 	border-right: #161d28 solid 1px;
 }
+.cnsl-block.cnsl-opt-zone
+{
+	width: 302px;
+	height: 640px;
+}
 .cnsl-block .row
 {
 	clear: both;
@@ -269,6 +274,16 @@ body
 .bt-showinfo .shortcut
 {
 	
+}
+.opt-menu
+{
+	display: none;
+	height: 100%;
+	overflow: hidden;
+}
+.opt-menu.active
+{
+	display: block;
 }
 
 /*********
@@ -463,6 +478,111 @@ body
 .msg-sign.icon-info:before { color: #d8d8d8;}
 
 /*********
+* gopro
+**********/
+.gopro-row
+{
+	height: 100px;
+	background-color: #2B323C;
+	color: #626B7B;
+	border-bottom: #161d28 solid 1px;
+	position: relative;
+	overflow: hidden;
+}
+.gopro-obj
+{
+	float: left;
+}
+.gopro-obj.title
+{
+	width: 302px;
+}
+.gopro-obj.select
+{
+	width: 600px;
+}
+.gopro-obj.select-list
+{
+	height: 100px;
+	overflow: auto;
+	width: 200px;
+	border-left: #161d28 solid 1px;
+}
+.gopro-obj.select-list .message
+{
+	width: 200px;
+	text-align: center;
+	line-height: 100px;
+}
+.gopro-select-item
+{
+	height: 30px;
+	border-bottom: #161d28 solid 1px;
+	line-height: 30px;
+	padding: 0 10px;
+}
+.gopro-obj.gopro-ssid
+{
+	width: 200px;
+	text-align: center;
+	font-size: 20px;
+	line-height: 100px;
+}
+.gopro-obj.signal
+{
+	width: 100px;
+	position: relative;
+}
+.gopro-obj.signal .signal-container
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+.gopro-obj.signal .signal-container.back
+{
+	color: #343B47;
+}
+.gopro-obj.signal .signal-container.front
+{
+	width: 10%;
+}
+.gopro-obj.gopro-ssid span
+{
+	font-size: 20px;
+	padding: 0 10px;
+	cursor: pointer;	
+}
+.gopro-obj.gopro-ssid span:hover
+{
+	color: #BCC5D5;
+}
+.gopro-obj.photo
+{
+	border-right: #161d28 solid 1px;
+	width: 200px;
+}
+.gopro-obj.video
+{
+	width: 100px;
+}
+.gopro-obj.photoaction,
+.gopro-obj.videoaction
+{
+	width: 100%;
+	border-bottom: #161d28 solid 1px;
+}
+.gopro-obj.videoaction .icon-gopro-videostop
+{
+	color: #692222;
+}
+.gopro-obj.videoaction.hover .icon-gopro-videostop
+{
+	color: #EC3535;
+}
+
+/*********
 * fonts
 **********/
 @font-face
@@ -506,6 +626,14 @@ body
 .icon-critical:before { content: "\e613"; }
 .icon-remind:before { content: "\e614"; }
 .icon-info:before { content: "\e615"; }
+.icon-gopro:before { content: "\e616"; }
+.icon-goproobj:before { content: "\e617"; }
+.icon-gopro-signal:before { content: "\e618"; }
+.icon-gopro-photo:before { content: "\e619"; }
+.icon-gopro-video:before { content: "\e61a"; }
+.icon-gopro-photocut:before { content: "\e61b"; }
+.icon-gopro-videostop:before { content: "\e61c"; }
+.icon-gopro-videostart:before { content: "\e61d"; }
 
 .menu-item .iconfont
 {
@@ -562,4 +690,20 @@ body
 	text-align: center;
 	line-height: 150px;
 	font-size: 50px;
+}
+.gopro-row .iconfont
+{
+	height: 100px;
+	width: 100%;
+	text-align: center;
+	line-height: 100px;
+	font-size: 30px;
+}
+.gopro-row .iconfont:before
+{
+	font-size: 50px;
+}
+.signal-container .iconfont
+{
+	width: 100px;
 }

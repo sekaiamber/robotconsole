@@ -25,6 +25,7 @@ $(document).ready(function(){
         menu2 : $(".menu-item:eq(1)").first(),
         menu3 : $(".menu-item:eq(2)").first(),
         menu4 : $(".menu-item:eq(3)").first(),
+        menu5 : $(".menu-item:eq(4)").first(),
         light : $(".cnsl-block .light").first(),
         connection : $(".metro-block.sb-right-1 .canvas-container").first(),
         voltage : $(".metro-block.sb-right-2 .canvas-container").first(),
@@ -38,7 +39,11 @@ $(document).ready(function(){
         shortcut : $(".metro-bt.shortcut").first(),
         printScreen : $(".metro-bt.bt-scrn").first(),
         download : $(".metro-bt.bt-download").first(),
-        messageContainer : $(".cnsl-block .picture").first()
+        messageContainer : $(".cnsl-block .picture").first(),
+        goProSelector : $(".gopro-obj.select").first(),
+        goProInfo : $(".gopro-row.gopro").first(),
+        goProMode : $(".gopro-row.mode").first(),
+        goProAction : $(".gopro-row.action").first(),
     };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
@@ -173,6 +178,36 @@ $(document).ready(function(){
         level : ['debug', 'info', 'remind', 'warning', 'error', 'critical'],
         stay : 5000,
     });
+    goProSelectorInit($controller, {
+        empty: '未找到goPro',
+        searching: '扫描中...',
+        gopros: [
+            {
+                "ssid": "gopro1234",
+                "frequency": "2462",
+                "signal": "-46",
+                "mac": "00:00:00:00:00:00"
+            },
+            {
+                "ssid": "406",
+                "frequency": "2462",
+                "signal": "-46",
+                "mac": "00:00:00:00:00:00"
+            }
+        ]
+    });
+    goProInfoInit($controller, {
+        noConnect: '未选择GoPro',
+        signal: 0.4
+    });
+    goProModeInit($controller, {
+        current: 0,
+        enable: false
+    });
+    goProActionInit($controller, {
+        current: 0,
+        enable: false
+    });
 });
 
 /*******************
@@ -180,21 +215,26 @@ $(document).ready(function(){
 ********************/
 
 function metroBtInit () {
-    $(".metro-bt").hover(function(){
+    $(".metro-bt").each(function(){
+        metroBtItemInit($(this));
+    });
+};
+function metroBtItemInit($bt) {
+    $bt.hover(function(){
         $(this).addClass("hover");
     }, function(){
         $(this).removeClass("hover");
     });
-    $(".metro-bt").mousedown(function(){
+    $bt.mousedown(function(){
         $(this).addClass("press");
     });
-    $(".metro-bt").mouseup(function(){
+    $bt.mouseup(function(){
        $(this).removeClass("press");
     });
-    $(".metro-bt").mouseleave(function(){
+    $bt.mouseleave(function(){
        $(this).removeClass("press"); 
     });
-};
+}
 
 var __CLOCK__;
 var __CLOCK_DATA__;
@@ -235,7 +275,7 @@ function controllerInit(map) {
 };
 
 function menuInit($controller) {
-    "menu1,menu2,menu3,menu4".replace($controller.reach, function(key){
+    "menu1,menu2,menu3,menu4,menu5".replace($controller.reach, function(key){
         $controller.bind(key, "mouseenter", function(){
             $(this).addClass("hover");
             $(this).velocity('stop').velocity({
@@ -249,6 +289,18 @@ function menuInit($controller) {
                   left: 0
             }, 300, function(){
                 $(this).removeClass("hover");
+            });
+        });
+    });
+    "menu1,menu5".replace($controller.reach, function(key){
+        $controller.bind(key, "mouseup", function(){
+            $(".menu-item.active").removeClass('active');
+            $(this).addClass('active');
+            $(".cnsl-opt-zone .opt-menu.active").slideUp(400, function(){
+                $(this).removeClass('active');
+                $(".cnsl-opt-zone .opt-menu." + key).slideDown(400, function(){
+                    $(this).addClass('active');
+                });
             });
         });
     });
@@ -617,6 +669,131 @@ function messagerInit($controller, data) {
 function makeMessage(level, msg) {
     var ret = $('<div class="msg-item ' + level + '"><div class="msg-sign iconfont icon-' + level + '"></div><div class="msg-text">' + msg +"</div></div>");
     return ret;
+}
+
+function goProSelectorInit($controller, data) {
+    $controller.set("goProSelector", data);
+    $controller.do("goProSelector", function($obj, data) {
+        $obj.hover(function(){
+            $(".title", $(this)).velocity('stop').velocity({ width : 100} );
+        }, function(){
+            $(".title", $(this)).velocity('stop').velocity({ width : 302} );
+        });
+    });
+    $controller.attach("goProSelector", "setgopros", function(gopros, data) {
+        data.gopros = gopros;
+        var $list = $(".select-list", this).first();
+        $list.empty();
+        if (gopros.length == 0) {
+            $list.append('<div class="message">' + data.empty + '</div>');
+            return;
+        };
+        for (var i = 0; i < gopros.length; i++) {
+            var gopro =  gopros[i];
+            var $bt = $('<div class="gopro-select-item metro-block metro-bt">' + gopros[i].ssid + '</div>');
+            $list.append($bt);
+            metroBtItemInit($bt);
+            $bt.click(function(){
+                $controller.invoke("goProInfo", "setgopro", $(this).html());
+                $controller.invoke("goProInfo", "setsignal", 0);
+            });
+        };
+    });
+    $controller.invoke("goProSelector", "setgopros", data.gopros);
+}
+
+function goProInfoInit($controller, data) {
+    $.extend(data, {
+        current : null
+    })
+    $controller.set("goProInfo", data);
+    $controller.attach("goProInfo", "setgopro", function(goproname, data) {
+        data.current = goproname;
+        if (goproname) {
+            $(".gopro-ssid", this).html('<span class="iconfont">&#xe610;</span>' + goproname);
+            $(".gopro-ssid span", this).click(function(){
+                $controller.invoke("goProInfo", "disconnect");
+            });
+            $controller.get("goProMode").enable = true;
+            $controller.get("goProAction").enable = true;
+        } else {
+            $(".gopro-ssid", this).html(data.noConnect);
+            $controller.get("goProMode").enable = false;
+            $controller.get("goProAction").enable = false;
+        }
+    });
+    $controller.attach("goProInfo", "setsignal", function(signal, data) {
+        data.signal = signal;
+        signal = 32 + 36 * signal;
+        $(".signal-container.front", this).css("width", signal + "%");
+    });
+    $controller.attach("goProInfo", "disconnect", function(data) {
+        data.current = null
+        $controller.invoke("goProInfo", "setgopro", null);
+        $controller.get("goProMode").enable = false;
+        $controller.get("goProAction").enable = false;
+    });
+    $controller.invoke("goProInfo", "setsignal", data.signal);
+}
+
+function goProModeInit($controller, data) {
+    $controller.set("goProMode", data);
+    $controller.attach("goProMode", "setMode", function(mode, data) {
+        if (data.current == mode || !data.enable) {
+            return;
+        };
+        data.current = mode;
+        if (mode == 0) {
+            $(".gopro-obj.photo", this).velocity('stop').velocity({ width: 200 });
+            $(".gopro-obj.video", this).velocity('stop').velocity({ width: 100 });
+        } else if (mode == 1) {
+            $(".gopro-obj.photo", this).velocity('stop').velocity({ width: 100 });
+            $(".gopro-obj.video", this).velocity('stop').velocity({ width: 200 });
+        };
+        $controller.invoke("goProAction", "setMode", mode);
+    });
+    $controller.do("goProMode", function($obj, data) {
+        $(".gopro-obj.photo", $obj).click(function(){
+            if (!data.enable) { return; };
+            $controller.invoke("goProMode", "setMode", 0);
+            $(".gopro-obj.video", $obj).removeClass('active');
+            $(this).addClass("active");
+        });
+        $(".gopro-obj.video", $obj).click(function(){
+            if (!data.enable) { return; };
+            $controller.invoke("goProMode", "setMode", 1);
+            $(".gopro-obj.photo", $obj).removeClass('active');
+            $(this).addClass("active");
+        });
+    });
+}
+
+function goProActionInit($controller, data) {
+    $controller.set("goProAction", data);
+    $controller.attach("goProAction", "setMode", function(mode, data) {
+        if (data.current == mode || !data.enable) {
+            return;
+        };
+        data.current = mode;
+        if (mode == 0) {
+            $(".gopro-obj.photoaction", this).slideDown();
+        } else if (mode == 1) {
+            $(".gopro-obj.photoaction", this).slideUp();
+        };
+    });
+    $controller.do("goProAction", function($obj, data) {
+        $(".gopro-obj.videoaction", $obj).click(function(){
+            if (!data.enable) { return; };
+            var $icon = $(".iconfont", $(this)).first();
+            if ($icon.hasClass('icon-gopro-videostart')) {
+                $icon.removeClass('icon-gopro-videostart');
+                $icon.addClass('icon-gopro-videostop');
+            } else if ($icon.hasClass('icon-gopro-videostop')) {
+                $icon.removeClass('icon-gopro-videostop');
+                $icon.addClass('icon-gopro-videostart');
+            };
+        });
+    });
 }
 
 /*******************

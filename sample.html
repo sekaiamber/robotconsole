@@ -32,6 +32,10 @@
 					<div class="iconfont icon-pic"></div>
 					<div class="text">图片</div>
 				</div>
+				<div class="menu-item">
+					<div class="iconfont icon-gopro"></div>
+					<div class="text">GoPro</div>
+				</div>
 			</div>
 		</div>
 		<div class="content">
@@ -40,55 +44,96 @@
 			</div>
 			<div class="console">
 				<div class="zone-1">
-					<div class="cnsl-block">
-						<div class="light" hint="灯光控制"></div>
-						<div class="direction">
-							<div class="row">
-								<div class="metro-block metro-bt bt-float" hint="上浮">
-									<div class="iconfont icon-float"></div>
+					<div class="cnsl-block cnsl-opt-zone">
+						<div class="opt-menu menu1 active">
+							<div class="light" hint="灯光控制"></div>
+							<div class="direction">
+								<div class="row">
+									<div class="metro-block metro-bt bt-float" hint="上浮">
+										<div class="iconfont icon-float"></div>
+									</div>
+									<div class="metro-block metro-bt bt-ahead" hint="前进">
+										<div class="iconfont icon-up"></div>
+									</div>
+									<div class="metro-block last metro-bt bt-dive" hint="下沉">
+										<div class="iconfont icon-dive"></div>
+									</div>
 								</div>
-								<div class="metro-block metro-bt bt-ahead" hint="前进">
-									<div class="iconfont icon-up"></div>
+								<div class="row">
+									<div class="metro-block metro-bt bt-left" hint="左转">
+										<div class="iconfont icon-left"></div>
+									</div>
+									<div class="metro-block metro-bt bt-back" hint="后退">
+										<div class="iconfont icon-down"></div>
+									</div>
+									<div class="metro-block last metro-bt bt-right" hint="右转">
+										<div class="iconfont icon-right"></div>
+									</div>
 								</div>
-								<div class="metro-block last metro-bt bt-dive" hint="下沉">
-									<div class="iconfont icon-dive"></div>
+								<div class="row">
+									<div class="metro-block width-2 csl-shift">
+										<div class="text"></div>
+									</div>
+									<div class="metro-block last metro-bt bt-stopall" hint="停止一切">
+										<div class="iconfont icon-stopall"></div>
+									</div>
 								</div>
 							</div>
-							<div class="row">
-								<div class="metro-block metro-bt bt-left" hint="左转">
-									<div class="iconfont icon-left"></div>
+							<div class="showboard part-1">
+								<div class="row">
+									<div class="metro-block metro-bt bt-camera-left" hint="摄像头左转">
+										<div class="iconfont icon-turnleft"></div>
+									</div>
+									<div class="metro-block metro-bt last bt-camera-right" hint="摄像头右转">
+										<div class="iconfont icon-turnright"></div>
+									</div>
 								</div>
-								<div class="metro-block metro-bt bt-back" hint="后退">
-									<div class="iconfont icon-down"></div>
-								</div>
-								<div class="metro-block last metro-bt bt-right" hint="右转">
-									<div class="iconfont icon-right"></div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="metro-block width-2 csl-shift">
-									<div class="text"></div>
-								</div>
-								<div class="metro-block last metro-bt bt-stopall" hint="停止一切">
-									<div class="iconfont icon-stopall"></div>
+								<div class="row last">
+									<div class="metro-block metro-bt bt-camera-reset" hint="摄像头重置">
+										<div class="iconfont icon-reset"></div>
+									</div>
+									<div class="metro-block last" hint="摄像头角度">
+										<canvas class="camera-angle" width="150" height="130"></canvas>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="showboard part-1">
-							<div class="row">
-								<div class="metro-block metro-bt bt-camera-left" hint="摄像头左转">
-									<div class="iconfont icon-turnleft"></div>
+						<div class="opt-menu menu5">
+							<div class="gopro-cnsl">
+								<div class="gopro-row" hint="选择连接">
+									<div class="gopro-obj select">
+										<div class="gopro-obj title metro-block metro-bt">
+											<div class="iconfont icon-goproobj"></div>
+										</div>
+										<div class="gopro-obj select-list"></div>
+									</div>
 								</div>
-								<div class="metro-block metro-bt last bt-camera-right" hint="摄像头右转">
-									<div class="iconfont icon-turnright"></div>
+								<div class="gopro-row gopro" hint="连接状态">
+									<div class="gopro-obj gopro-ssid">未选择GoPro</div>
+									<div class="gopro-obj signal">
+										<div class="signal-container back">
+											<div class="iconfont icon-gopro-signal"></div>
+										</div>
+										<div class="signal-container front">
+											<div class="iconfont icon-gopro-signal"></div>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="row last">
-								<div class="metro-block metro-bt bt-camera-reset" hint="摄像头重置">
-									<div class="iconfont icon-reset"></div>
+								<div class="gopro-row mode" hint="照片/摄像">
+									<div class="gopro-obj photo metro-block metro-bt active">
+										<div class="iconfont icon-gopro-photo"></div>
+									</div>
+									<div class="gopro-obj video metro-block metro-bt">
+										<div class="iconfont icon-gopro-video"></div>
+									</div>
 								</div>
-								<div class="metro-block last" hint="摄像头角度">
-									<canvas class="camera-angle" width="150" height="130"></canvas>
+								<div class="gopro-row action" hint="操作">
+									<div class="gopro-obj photoaction metro-block metro-bt">
+										<div class="iconfont icon-gopro-photocut"></div>
+									</div>
+									<div class="gopro-obj videoaction metro-block metro-bt">
+										<div class="iconfont icon-gopro-videostart"></div>
+									</div>
 								</div>
 							</div>
 						</div>
