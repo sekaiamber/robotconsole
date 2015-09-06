@@ -17,6 +17,10 @@ This document will show all controls that in the page, and list their initialize
 * [shortcut system](#shortcut-system)
 * [buttons](#buttons)
 * [message system](#message-system)
+* [gopro wifi selector](#gopro-wifi-selector)
+* [gopro info](#gopro-info)
+* [gopro mode selector](#gopro-mode-selector)
+* [gopro action](#gopro-action)
 
 ### clock
 
@@ -305,3 +309,140 @@ $controller.invoke("messageContainer", "message", "testLevel", "Testlevel messag
 **message behavior**
 
 Normally, a message will come in and stay in its container for a given time(passing by init function), finally goes out by some way, it is called a event chain. But if manually **click** itself, it will break the event chain and stop it, and start to disappear. This is a tactics of dealing with so called 'message explosion'. If a lot of messages come out in a short time, the container will flooded with those messages, this will grab user‘s attention, we don't like this. So user do have the right to close the message by himself.
+
+### gopro wifi selector
+
+* **In $controller:** Yes
+* **$controller alias:** goProSelector
+* **Init function:** goProSelectorInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| empty | string | default text for no result. this can be used for everywhere. |
+| searching | string | default text for searching. this can be used for everywhere. |
+| gopros | array | a list of gopro cameras. see following gopros example. |
+
+** gopros array example **
+
+```json
+[
+    {
+        "ssid": "gopro1234",
+        "frequency": "2462",
+        "signal": "-46",
+        "mac": "00:00:00:00:00:00"
+    },
+    {
+        "ssid": "406",
+        "frequency": "2462",
+        "signal": "-46",
+        "mac": "00:00:00:00:00:00"
+    }
+]
+```
+
+* **Function can Invoke:**
+  * setgopros(gopros)
+
+*Example*
+```javascript
+$controller.invoke("goProSelector", "setgopros", [
+    {
+        "ssid": "gopro1234",
+        "frequency": "2462",
+        "signal": "-46",
+        "mac": "00:00:00:00:00:00"
+    },
+    {
+        "ssid": "406",
+        "frequency": "2462",
+        "signal": "-46",
+        "mac": "00:00:00:00:00:00"
+    }
+]);
+```
+
+### gopro info
+
+* **In $controller:** Yes
+* **$controller alias:** goProInfo
+* **Init function:** goProInfoInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| noConnect | string | default text for no gopro connect. this can be used for everywhere. |
+| signal | float | default signal. limited in 0 to 1. we suggest set to 0. |
+
+* **Function can Invoke:**
+  * setsignal(signal)
+
+*Example*
+```javascript
+$controller.invoke("goProInfo", "setsignal", 0.4);
+// data.signal will set to 0.4, and the sign in page will display 40% width of its front color.
+```
+
+  * disconnect()
+
+*Example*
+```javascript
+$controller.invoke("goProInfo", "disconnect");
+// UI will show the disconnect status.
+// You can add some code in this function's attach function to achieve its real logic
+```
+
+### gopro mode selector
+
+* **In $controller:** Yes
+* **$controller alias:** goProMode
+* **Init function:** goProModeInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| current | int | default mode of gopro. limited in [0, 1], 0: photo, 1: video. |
+| enable | boolean | default enable. if this set to `false`, control will be disabled. |
+
+* **Function can Invoke:**
+  * setMode(signal)
+
+*Example*
+```javascript
+$controller.invoke("goProMode", "setMode", 1);
+// UI will set to video mode
+```
+
+**How to: set goProMode control disabled**
+```javascript
+// we just set its data.enable to `false`
+$controller.get("goProMode").enable = false;
+```
+
+### gopro action
+
+* **In $controller:** Yes
+* **$controller alias:** goProAction
+* **Init function:** goProActionInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| current | int | default mode of gopro. limited in [0, 1], 0: photo, 1: video. |
+| enable | boolean | default enable. if this set to `false`, control will be disabled. |
+
+* **Function can Invoke:**
+  * setMode(signal)
+
+*Example*
+```javascript
+$controller.invoke("goProAction", "setMode", 1);
+// UI will set to video mode
+```
+
+**How to: set goProAction control disabled**
+```javascript
+// we just set its data.enable to `false`
+$controller.get("goProAction").enable = false;
+```
