@@ -292,7 +292,7 @@ function menuInit($controller) {
             });
         });
     });
-    "menu1,menu5".replace($controller.reach, function(key){
+    "menu1,menu4,menu5".replace($controller.reach, function(key){
         $controller.bind(key, "mouseup", function(){
             $(".menu-item.active").removeClass('active');
             $(this).addClass('active');
