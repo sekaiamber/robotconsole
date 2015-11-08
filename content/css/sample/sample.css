@@ -316,6 +316,9 @@ body
 .csl-shift .text
 {
 	height: 49px;
+	color: #626B7B;
+	line-height: 49px;
+	padding-left: 20px;
 }
 .csl-shift .shift
 {
@@ -363,6 +366,23 @@ body
 .metro-bt.press
 {
 	background: #424954 !important;
+}
+.metro-bt.bt-lock-deep,
+.metro-bt.bt-lock-course
+{
+	line-height: 49px;
+	text-align: center;
+	font-size: 20px;
+}
+.metro-bt.bt-lock-deep
+{
+	height: 49px;
+}
+.metro-bt.bt-lock-course
+{
+	height: 50px;
+	border-width: 0px;
+	border-top: #161d28 solid 1px;
 }
 
 /*********
@@ -580,6 +600,20 @@ body
 .gopro-obj.videoaction.hover .icon-gopro-videostop
 {
 	color: #EC3535;
+}
+
+/*********
+* footer
+**********/
+#footer
+{
+	position: absolute;
+	height: 50px;
+	line-height: 50px;
+	width: 100%;
+	text-align: center;
+	color: #626B7B;
+	bottom: 0;
 }
 
 /*********
