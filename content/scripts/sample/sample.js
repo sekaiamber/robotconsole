@@ -16,7 +16,6 @@ $(document).ready(function(){
         back : $(".metro-bt.bt-back").first(),
         right : $(".metro-bt.bt-right").first(),
         shift : $(".metro-block.csl-shift").first(),
-        stopAll : $(".metro-bt.bt-stopall").first(),
         sbR1 : $(".metro-block.sb-right-1").first(),
         sbR2 : $(".metro-block.sb-right-2").first(),
         sbR3 : $(".metro-block.sb-right-3").first(),
@@ -44,6 +43,8 @@ $(document).ready(function(){
         goProInfo : $(".gopro-row.gopro").first(),
         goProMode : $(".gopro-row.mode").first(),
         goProAction : $(".gopro-row.action").first(),
+        lockDeep: $(".metro-bt.bt-lock-deep").first(),
+        lockCourse: $(".metro-bt.bt-lock-course").first(),
     };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
@@ -154,8 +155,6 @@ $(document).ready(function(){
             { type: 'up', mask: 'S', target: 'back', invoke: 'clickUp', label: 'tl'},
             { type: 'hold', mask: 'D', target: 'right', invoke: 'clickDown', label: 'tl'},
             { type: 'up', mask: 'D', target: 'right', invoke: 'clickUp', label: 'tl'},
-            { type: 'hold', mask: 'X', target: 'stopAll', invoke: 'clickDown', label: 'tl'},
-            { type: 'up', mask: 'X', target: 'stopAll', invoke: 'clickUp', label: 'tl'},
             { type: 'hold', mask: 'Left', target: 'cameraLeft', invoke: 'clickDown', label: 'tl'},
             { type: 'up', mask: 'Left', target: 'cameraLeft', invoke: 'clickUp', label: 'tl'},
             { type: 'hold', mask: 'Right', target: 'cameraRight', invoke: 'clickDown', label: 'tl'},
@@ -208,6 +207,14 @@ $(document).ready(function(){
         current: 0,
         enable: false
     });
+    lockInit($controller, {
+        deep: {
+            current: false,
+        },
+        course: {
+            current: false,
+        }
+    })
 });
 
 /*******************
@@ -354,6 +361,9 @@ function shiftInit($controller, data) {
         }
     });
     $controller.set("shift", data);
+    $controller.attach('shift', 'afterSetLevel', function(level) {
+        $('.text', this).html('当前档位：' + level + '档');
+    });
     $controller.do("shift", function($obj, data) {
         var $shift = $('<div class="shift"></div>');
         for (var i = 0; i < data['total']; i++) {
@@ -792,6 +802,34 @@ function goProActionInit($controller, data) {
                 $icon.removeClass('icon-gopro-videostop');
                 $icon.addClass('icon-gopro-videostart');
             };
+        });
+    });
+}
+
+function lockInit($controller, data) {
+    var deepData = data['deep'];
+    var courseData = data['course'];
+    var func = function(value, data) {
+        if (value) {
+            this.addClass("active");
+        } else {
+            this.removeClass("active");
+        }
+        data['current'] = value;
+    }
+    $.extend(deepData, {
+        setValue : func,
+    });
+    $.extend(courseData, {
+        setValue : func,
+    });
+    $controller.set('lockDeep', deepData);
+    $controller.set('lockCourse', courseData);
+    'lockDeep,lockCourse'.replace($controller.reach, function(name) {
+        $controller.do(name, function($obj, data) {
+            $obj.click(function() {
+                data.setValue.call($(this), !$(this).hasClass("active"), data);
+            });
         });
     });
 }
