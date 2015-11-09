@@ -622,21 +622,81 @@ body
 .opt-menu.menu4
 {
 	overflow: hidden;
-	overflow-y: auto;
+}
+.scroll-layer
+{
+	width: calc(100% + 50px);
+	height: 100%;
+	overflow: hidden;
+	overflow-y: scroll;
+}
+.scroll-container
+{
+	width: 302px;
+	height: 100%;
 }
 .photo-item
 {
-	width: 150px;
-	height: 150px;
+	width: calc(50% - 1px);
+	height: 120px;
 	border-right: #161d28 solid 1px;
 	border-bottom: #161d28 solid 1px;
 	float: left;
+	cursor: pointer;
+	overflow: hidden;
+	position: relative;
 }
-
 .photo-item.last
 {
-	width: 151px;
+	width: 50%;
 	border-right: #161d28 solid 0px;
+}
+.photo-item.bottom
+{
+	border-bottom: #161d28 solid 0px !important;
+}
+.photo-item img
+{
+	width: 200px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	-webkit-transition: all 500ms ease-in-out;
+	-moz-transition: all 500ms ease-in-out;
+	-ms-transition: all 500ms ease-in-out;
+	-o-transition: all 500ms ease-in-out;
+	transition: all 500ms ease-in-out;
+}
+.photo-item img:hover
+{
+	width: 250px;
+}
+.photo-title
+{
+	position: absolute;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	background: rgba(0, 0, 0, .2);
+	bottom: 0;
+	height: 0;
+	line-height: 25px;
+	padding: 0 3px;
+	-webkit-transition: all 500ms ease-in-out;
+	-moz-transition: all 500ms ease-in-out;
+	-ms-transition: all 500ms ease-in-out;
+	-o-transition: all 500ms ease-in-out;
+	transition: all 500ms ease-in-out;
+}
+.photo-item.hover .photo-title
+{
+	height: 25px;
 }
 
 /*********

@@ -45,7 +45,7 @@ $(document).ready(function(){
         goProAction : $(".gopro-row.action").first(),
         lockDeep: $(".metro-bt.bt-lock-deep").first(),
         lockCourse: $(".metro-bt.bt-lock-course").first(),
-        photoContainer: $(".opt-menu.menu4").first(),
+        photoContainer: $(".opt-menu.menu4 .scroll-layer .scroll-container").first(),
     };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
@@ -845,7 +845,7 @@ function photoSubpageInit($controller, data) {
             this.empty();
             for (var i = 0; i < pics.length; i++) {
                 var p = pics[i];
-                var $p = $('<div class="photo-item"></div>');
+                var $p = $('<div class="photo-item"><img src="' + p.url + '" ><div class="photo-title" title="' + p.title + '">' + p.title + '</div></div>');
                 if (i % 2) {
                     $p.addClass('last');
                 };
@@ -854,6 +854,12 @@ function photoSubpageInit($controller, data) {
             if (pics.length % 2) {
                 this.append('<div class="photo-item last"></div>');
             };
+            $(".photo-item:gt(-3)").addClass('bottom');
+            $(".photo-item").hover(function(){
+                $(this).addClass('hover');
+            }, function() {
+                $(this).removeClass('hover');
+            });
         },
     });
     $controller.set('photoContainer', data);
