@@ -16,7 +16,6 @@ $(document).ready(function(){
         back : $(".metro-bt.bt-back").first(),
         right : $(".metro-bt.bt-right").first(),
         shift : $(".metro-block.csl-shift").first(),
-        stopAll : $(".metro-bt.bt-stopall").first(),
         sbR1 : $(".metro-block.sb-right-1").first(),
         sbR2 : $(".metro-block.sb-right-2").first(),
         sbR3 : $(".metro-block.sb-right-3").first(),
@@ -44,6 +43,9 @@ $(document).ready(function(){
         goProInfo : $(".gopro-row.gopro").first(),
         goProMode : $(".gopro-row.mode").first(),
         goProAction : $(".gopro-row.action").first(),
+        lockDeep: $(".metro-bt.bt-lock-deep").first(),
+        lockCourse: $(".metro-bt.bt-lock-course").first(),
+        photoContainer: $(".opt-menu.menu4 .scroll-layer .scroll-container").first(),
     };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
@@ -154,8 +156,6 @@ $(document).ready(function(){
             { type: 'up', mask: 'S', target: 'back', invoke: 'clickUp', label: 'tl'},
             { type: 'hold', mask: 'D', target: 'right', invoke: 'clickDown', label: 'tl'},
             { type: 'up', mask: 'D', target: 'right', invoke: 'clickUp', label: 'tl'},
-            { type: 'hold', mask: 'X', target: 'stopAll', invoke: 'clickDown', label: 'tl'},
-            { type: 'up', mask: 'X', target: 'stopAll', invoke: 'clickUp', label: 'tl'},
             { type: 'hold', mask: 'Left', target: 'cameraLeft', invoke: 'clickDown', label: 'tl'},
             { type: 'up', mask: 'Left', target: 'cameraLeft', invoke: 'clickUp', label: 'tl'},
             { type: 'hold', mask: 'Right', target: 'cameraRight', invoke: 'clickDown', label: 'tl'},
@@ -207,6 +207,17 @@ $(document).ready(function(){
     goProActionInit($controller, {
         current: 0,
         enable: false
+    });
+    lockInit($controller, {
+        deep: {
+            current: false,
+        },
+        course: {
+            current: false,
+        }
+    });
+    photoSubpageInit($controller, {
+        url: 'photosample.json'
     });
 });
 
@@ -292,7 +303,7 @@ function menuInit($controller) {
             });
         });
     });
-    "menu1,menu5".replace($controller.reach, function(key){
+    "menu1,menu4,menu5".replace($controller.reach, function(key){
         $controller.bind(key, "mouseup", function(){
             $(".menu-item.active").removeClass('active');
             $(this).addClass('active');
@@ -300,6 +311,7 @@ function menuInit($controller) {
                 $(this).removeClass('active');
                 $(".cnsl-opt-zone .opt-menu." + key).slideDown(400, function(){
                     $(this).addClass('active');
+                    $controller.invoke(key, 'afterSlideDown');
                 });
             });
         });
@@ -354,6 +366,9 @@ function shiftInit($controller, data) {
         }
     });
     $controller.set("shift", data);
+    $controller.attach('shift', 'afterSetLevel', function(level) {
+        $('.text', this).html('当前档位：' + level + '档');
+    });
     $controller.do("shift", function($obj, data) {
         var $shift = $('<div class="shift"></div>');
         for (var i = 0; i < data['total']; i++) {
@@ -792,6 +807,94 @@ function goProActionInit($controller, data) {
                 $icon.removeClass('icon-gopro-videostop');
                 $icon.addClass('icon-gopro-videostart');
             };
+        });
+    });
+}
+
+function lockInit($controller, data) {
+    var deepData = data['deep'];
+    var courseData = data['course'];
+    var func = function(value, data) {
+        if (value) {
+            this.addClass("active");
+        } else {
+            this.removeClass("active");
+        }
+        data['current'] = value;
+    }
+    $.extend(deepData, {
+        setValue : func,
+    });
+    $.extend(courseData, {
+        setValue : func,
+    });
+    $controller.set('lockDeep', deepData);
+    $controller.set('lockCourse', courseData);
+    'lockDeep,lockCourse'.replace($controller.reach, function(name) {
+        $controller.do(name, function($obj, data) {
+            $obj.click(function() {
+                data.setValue.call($(this), !$(this).hasClass("active"), data);
+            });
+        });
+    });
+}
+
+function photoSubpageInit($controller, data) {
+    $.extend(data, {
+        setPhotos: function(pics) {
+            this.empty();
+            for (var i = 0; i < pics.length; i++) {
+                var p = pics[i];
+                var $p = $('<div class="photo-item"><img src="' + p.url + '" href="' + p.url + '"><div class="photo-title" title="' + p.title + '">' + p.title + '</div></div>');
+                if (i % 2) {
+                    $p.addClass('last');
+                };
+                this.append($p);
+            };
+            $('.opt-menu.menu4').magnificPopup({
+                delegate: '.scroll-layer .scroll-container .photo-item img',
+                type: 'image',
+                closeOnContentClick: false,
+                closeBtnInside: false,
+                mainClass: 'mfp-with-zoom mfp-img-mobile',
+                image: {
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return "";
+                        // return item.el.attr('title') + ' &middot; <a class="image-source-link" href="'+item.el.attr('data-source')+'" target="_blank">image source</a>';
+                    }
+                },
+                gallery: {
+                    enabled: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300, // don't foget to change the duration also in CSS
+                }
+            });
+            if (pics.length % 2) {
+                this.append('<div class="photo-item last"></div>');
+            };
+            $(".photo-item:gt(-3)").addClass('bottom');
+            $(".photo-item").hover(function(){
+                $(this).addClass('hover');
+            }, function() {
+                $(this).removeClass('hover');
+            });
+        },
+    });
+    $controller.set('photoContainer', data);
+    $controller.attach('menu4', 'afterSlideDown', function() {
+        $controller.invoke('photoContainer', 'updatePhotos');
+    });
+    $controller.attach('photoContainer', 'updatePhotos', function(photoData) {
+        // http://api.jquery.com/jQuery.ajax/
+        var $this = this;
+        $.ajax({
+            url: photoData.url,
+            method: 'GET',
+        }).done(function(data) {
+            photoData.setPhotos.call($this, data.data);
         });
     });
 }
