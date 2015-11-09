@@ -845,12 +845,33 @@ function photoSubpageInit($controller, data) {
             this.empty();
             for (var i = 0; i < pics.length; i++) {
                 var p = pics[i];
-                var $p = $('<div class="photo-item"><img src="' + p.url + '" ><div class="photo-title" title="' + p.title + '">' + p.title + '</div></div>');
+                var $p = $('<div class="photo-item"><img src="' + p.url + '" href="' + p.url + '"><div class="photo-title" title="' + p.title + '">' + p.title + '</div></div>');
                 if (i % 2) {
                     $p.addClass('last');
                 };
                 this.append($p);
             };
+            $('.opt-menu.menu4').magnificPopup({
+                delegate: '.scroll-layer .scroll-container .photo-item img',
+                type: 'image',
+                closeOnContentClick: false,
+                closeBtnInside: false,
+                mainClass: 'mfp-with-zoom mfp-img-mobile',
+                image: {
+                    verticalFit: true,
+                    titleSrc: function(item) {
+                        return "";
+                        // return item.el.attr('title') + ' &middot; <a class="image-source-link" href="'+item.el.attr('data-source')+'" target="_blank">image source</a>';
+                    }
+                },
+                gallery: {
+                    enabled: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300, // don't foget to change the duration also in CSS
+                }
+            });
             if (pics.length % 2) {
                 this.append('<div class="photo-item last"></div>');
             };
