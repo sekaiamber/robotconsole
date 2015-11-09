@@ -45,6 +45,7 @@ $(document).ready(function(){
         goProAction : $(".gopro-row.action").first(),
         lockDeep: $(".metro-bt.bt-lock-deep").first(),
         lockCourse: $(".metro-bt.bt-lock-course").first(),
+        photoContainer: $(".opt-menu.menu4 .scroll-layer .scroll-container").first(),
     };
     var $controller = controllerInit(controllerMap);
     window.$controller = $controller;
@@ -214,7 +215,10 @@ $(document).ready(function(){
         course: {
             current: false,
         }
-    })
+    });
+    photoSubpageInit($controller, {
+        url: 'photosample.json'
+    });
 });
 
 /*******************
@@ -307,6 +311,7 @@ function menuInit($controller) {
                 $(this).removeClass('active');
                 $(".cnsl-opt-zone .opt-menu." + key).slideDown(400, function(){
                     $(this).addClass('active');
+                    $controller.invoke(key, 'afterSlideDown');
                 });
             });
         });
@@ -830,6 +835,45 @@ function lockInit($controller, data) {
             $obj.click(function() {
                 data.setValue.call($(this), !$(this).hasClass("active"), data);
             });
+        });
+    });
+}
+
+function photoSubpageInit($controller, data) {
+    $.extend(data, {
+        setPhotos: function(pics) {
+            this.empty();
+            for (var i = 0; i < pics.length; i++) {
+                var p = pics[i];
+                var $p = $('<div class="photo-item"><img src="' + p.url + '" ><div class="photo-title" title="' + p.title + '">' + p.title + '</div></div>');
+                if (i % 2) {
+                    $p.addClass('last');
+                };
+                this.append($p);
+            };
+            if (pics.length % 2) {
+                this.append('<div class="photo-item last"></div>');
+            };
+            $(".photo-item:gt(-3)").addClass('bottom');
+            $(".photo-item").hover(function(){
+                $(this).addClass('hover');
+            }, function() {
+                $(this).removeClass('hover');
+            });
+        },
+    });
+    $controller.set('photoContainer', data);
+    $controller.attach('menu4', 'afterSlideDown', function() {
+        $controller.invoke('photoContainer', 'updatePhotos');
+    });
+    $controller.attach('photoContainer', 'updatePhotos', function(photoData) {
+        // http://api.jquery.com/jQuery.ajax/
+        var $this = this;
+        $.ajax({
+            url: photoData.url,
+            method: 'GET',
+        }).done(function(data) {
+            photoData.setPhotos.call($this, data.data);
         });
     });
 }
