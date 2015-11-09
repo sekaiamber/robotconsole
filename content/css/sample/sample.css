@@ -617,6 +617,29 @@ body
 }
 
 /*********
+* photos
+**********/
+.opt-menu.menu4
+{
+	overflow: hidden;
+	overflow-y: auto;
+}
+.photo-item
+{
+	width: 150px;
+	height: 150px;
+	border-right: #161d28 solid 1px;
+	border-bottom: #161d28 solid 1px;
+	float: left;
+}
+
+.photo-item.last
+{
+	width: 151px;
+	border-right: #161d28 solid 0px;
+}
+
+/*********
 * fonts
 **********/
 @font-face
