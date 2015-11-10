@@ -21,6 +21,8 @@ This document will show all controls that in the page, and list their initialize
 * [gopro info](#gopro-info)
 * [gopro mode selector](#gopro-mode-selector)
 * [gopro action](#gopro-action)
+* [lock deep](#lock-deep)
+* [photo container](#photo-container)
 
 ### clock
 
@@ -446,3 +448,36 @@ $controller.invoke("goProAction", "setMode", 1);
 // we just set its data.enable to `false`
 $controller.get("goProAction").enable = false;
 ```
+
+### lock deep
+
+* **In $controller:** Yes
+* **$controller alias:** lockDeep
+* **Init function:** lockInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| current | boolean | whether the button is pressed. |
+
+### lock course
+
+* **In $controller:** Yes
+* **$controller alias:** photoContainer
+* **Init function:** photoSubpageInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| current | boolean | whether the button is pressed. |
+
+### photo container
+
+* **In $controller:** Yes
+* **$controller alias:** lockCourse
+* **Init function:** lockInit()
+* **Init parameters:** 
+
+| parameter | type | description |
+| --- | --- | --- |
+| url | string | ajax url, where to get pictures url. |
