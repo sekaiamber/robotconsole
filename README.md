@@ -13,5 +13,13 @@ y: New feature/api introduced, Code architecture changed.
 z: bug fixed, small feature/improvment.
 
 ## Who can commit
+
 The following list shows who can commit.
 * sekaiamber
+
+## Run
+
+use node.
+```shell
+$ node server.js
+```
